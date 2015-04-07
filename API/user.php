@@ -13,7 +13,6 @@ class user{
 			MySql::runOtherQuery ("UPDATE login SET session=".$session." WHERE username='".$username."' AND password='".$password."';");;
 			array_push($payload, array("role" => $data[0]["role"], "session" => $session));
 		}
-
 		return($payload);
 	}
 }
