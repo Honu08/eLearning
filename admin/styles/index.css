@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+#reg-body{
+
+	background-color: #FFFFFF ;
+
+}
+
+#login-body{
+
+	background-color: #E0F8F7 ;
+
+}
+#page-container {
+	width: 1000px;
+	margin: auto;
+	margin-top: 25px;
+	/* border: 2px solid blue; */
+}
+
+#login-main-container {
+	width: 400px;
+	margin: center;
+	margin-top: 150px;
+	/* border: 2px solid blue; */
+}
+
+#main-container {
+	margin: auto;
+	width: 100%;
+	height: 30px;
+	
+	/* border: 2px solid blue; */
+	background-color: #B8B8B8;
+}
+
+#panel-container {
+	width: 100%;
+	margin: auto;
+	/* border: 2px solid red; */
+}
+
+#course-table {
+	margin-top: -40px;
+}

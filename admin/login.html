@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Bootstrap CSS library -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<!-- Custom CSS library -->
+	<link rel="stylesheet" href="styles/index.css">
+	<title>Admin</title>
+</head>
+
+<body id="login-body">
+	<div class="container" id="login-main-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="font-size: large">
+						<strong>VEP&nbsp;</strong> Virtual Education Program
+					</div>
+					<div class="panel-body">
+						<div id="login-error-alert" class="alert alert-danger" role="alert">
+							<strong>Error!</strong> Enter valid username or password.
+						</div>
+						<div id="input-field-username-container" class="form-group input-color-verifier" style="height: 50px;">
+							<input type="text" class="form-control" id="input-field-username" placeholder="Enter Username" style="height: 50px;">
+						</div>
+						<div id="input-field-password-container" class="form-group input-color-verifier">
+							<input type="password" class="form-control" id="input-field-password" placeholder="Enter Password" style="height: 50px;">
+						</div>
+					</div>
+					<div class="panel-footer">
+						<button class="btn btn-success" id="signup_button">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;&nbsp;Sign Up
+						</button>&nbsp;
+						<button class="btn btn-primary pull-right" id="login_button">
+							<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>&nbsp;&nbsp;Login
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<!-- Bootstrap JavaScript library -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<!-- Custom JavaScript library -->
+	<script src="scripts/login.js"></script>
+</body>
+
+</html>

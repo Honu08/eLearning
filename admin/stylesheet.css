@@ -1,0 +1,89 @@
+body{
+background-color:gray;
+}
+.main 
+{
+text-align:center;
+
+margin : 0px auto;
+
+}
+.wrapper
+{
+text-align:center;
+padding: 10px;
+overflow: auto;
+background-image: url("image/metal.jpg");
+background-position:center;
+}
+
+.bien 
+{
+text-align:center;
+width: 250px;
+height: 40px;
+background-color: black;
+float:left;
+color:black;
+
+margin : 0px auto;
+}
+
+
+
+a
+{
+text-decoration:none;
+color:gold;
+font-style:bold;
+font-size:20px;
+}
+
+
+.div1
+{
+text-align:center-left;
+width: 50%;
+background-color:rgb(40,40,40);
+margin : 10px center;
+color:silver;
+font-size:25px;
+display:inline-block;
+word-wrap: break-word;
+}
+
+.intro3
+{
+text-align:center;
+width: 40%;
+background-color:rgb(20,20,20);
+margin : 500px center;
+color:silver;
+font-size:20px;
+display:inline-block;
+word-wrap: break-word;
+}
+.intro2
+{
+text-align:left;
+width: 80%;
+
+background-color: white;
+margin : 0px auto;
+color:black;
+font-size:15px;
+display:inline-block;
+word-wrap: break-word;
+}
+
+.bottom
+{
+text-align:center;
+color:black;
+font-style:bold;
+font-size:20px;
+
+}
+
+//www.codecademy.com
+

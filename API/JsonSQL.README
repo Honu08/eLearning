@@ -1,0 +1,134 @@
+
+/*
+ *	INSERT statement
+ */
+
+$data = array (
+	"statement" => "insert",
+	"into" => "table_name",
+	"values" => array (
+		"column1" => "value1",
+		"column2" => 23,
+		"column3" => "value2",
+		"column4" => "value3",
+		"column5" => "timestamp",
+	)
+);
+
+INSERT INTO table_name (column1, column2, column3, column4, date, column5)
+	VALUES ("value1", 23, "value2", "value3", CURRENT_TIMESTAMP, "value4");
+
+/*
+ *	UPDATE statement
+ */
+
+$data = array (
+	"statement" => "update",
+	"table" => "table_name",
+	"set" => array (
+		"column1" => "value1",
+		"column2" => 23,
+		"column3" => "value2",
+		"column4" => "value3",
+		"date" 	  => "CURRENT_TIMESTAMP",
+		"column5" => "value4"
+	),
+	"where" => array (
+		"<" => array (
+			"or" => array (
+				"key1" => "123",
+				"key2" => 456
+			),
+			"and" => array (
+				"key3" => "value5",
+				"key4" => "value6",
+			)
+		),
+		">" => array (
+			"or" => array (
+				"key5" => "value7",
+				"key6" => 789
+			)
+		)
+	)
+);
+
+UPDATE table_name 
+	SET column1 = "value1", column2 = 23, column3 = "value2", column4 = "value3", date = CURRENT_TIMESTAMP, column5 = "value4" 
+	WHERE key1 < "123" or key2 < 456 and key3 < "value5" and key4 < "value6" or key5 > "value7" or key6 > 789;
+
+/*
+ *	SELECT statement
+ */
+
+$data = array (
+	"statement" => "select",
+	"columns" => array (
+		"table2.column1",
+		"column2",
+		"column3",
+		"table1.column4",
+		"table.3.date",
+		"column5"
+	),
+	"from" => array (
+		"table1",
+		"table2",
+		"table3"
+	),
+	"where" => array (
+		"=" => array (
+			"or" => array (
+				"key1" => "123",
+				"key2" => 456
+			),
+			"and" => array (
+				"key3" => "value5",
+				"key4" => "value6",
+			)
+		)
+	),
+	"orderby" => array (
+		"column2" => "ASC",
+		"column3" => "DESC"
+	)
+);
+
+SELECT table2.column1, column2, column3, table1.column4, table.3.date, column5 
+	FROM table1, table2, table3 
+	WHERE key1 = "123" or key2 = 456 and key3 = "value5" and key4 = "value6" 
+	ORDER BY column2 ASC, column3 DESC;
+
+/*
+ *	DELETE statement
+ */
+
+$data = array (
+	"statement" => "delete",
+	"from" => "table_name",
+	"where" => array (
+		"=" => array (
+			"or" => array (
+				"key1" => "123",
+				"key2" => 456
+			),
+			"and" => array (
+				"key3" => "value5",
+				"key4" => "value6",
+			)
+		),
+		"!=" => array (
+			"or" => array (
+				"key5" => "value7",
+				"key6" => 789
+			)
+		),
+		">" => array (
+			"key5" => "value7",
+			"key6" => 789
+		)
+	)
+);
+
+DELETE FROM table_name 
+	WHERE key1 = "123" or key2 = 456 and key3 = "value5" and key4 = "value6" or key5 != "value7" or key6 != 789 AND key5 > "value7" AND key6 > 789;
