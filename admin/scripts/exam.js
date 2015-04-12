@@ -1,5 +1,7 @@
 var questions = [];
 var index = 0;
+$("#exam-danger-alert").hide ();
+
 $("#plus_button").click(function() {
 	var x = questions.length+1;
 	var id = "id=\""+x+"\"";
@@ -27,11 +29,11 @@ $("#plus_button").click(function() {
 					"</div>"+
 					"<div id=\"input-field-choiceB-"+x+"-container\" class=\"form-group input-color-verifier\">"+
 						"<label>Choice 2: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB"+x+"\" placeholder=\"Enter Choice 2\">"+
+						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB-"+x+"\" placeholder=\"Enter Choice 2\">"+
 					"</div>"+
 					"<div id=\"input-field-choiceC-"+x+"-container\" class=\"form-group input-color-verifier\">"+
 						"<label>Choice 3: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC"+x+"\" placeholder=\"Enter Choice 3\">"+
+						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC-"+x+"\" placeholder=\"Enter Choice 3\">"+
 					"</div>"+
 				"</div>"+
 				"</div>"+"<hr class=\"featurette-divider\">"+
@@ -47,25 +49,79 @@ $("#plus_button").click(function() {
 				"</script>";
 	var obj= {"html":string,"status":"added"};
 	questions.push (obj);
+	
 	if(questions.length === 1){
 	$("#questions").html (null);
 	}
 	$("#questions").append (string);
 	index++;
+	
 	var test = "Questions: "+index;
 	$("#footer").html(test);
 });
 
-$("#insert_exam").click(function() {
-	getInputs(questions);
+$("#insert_exam").click(function(){
+	var bool = null;
+	var payload = [];
+	bool = getInputs(questions);
+	if(bool){
+		payload = getInputValues(questions);
+		console.info(payload);
+	}
 });
 
 function getInputs(arr){
+	var bool = true;
 	for (var i = 0; i<arr.length;i++){
 		if(arr[i].status != "removed"){
-			console.log(arr[i]);
+			if($("#input-field-question-"+(i+1)+"").val() === "" || $("#input-field-answer-"+(i+1)+"").val() === "" || $("#input-field-choiceA-"+(i+1)+"").val() === "" || $("#input-field-choiceB-"+(i+1)+"").val() === "" || $("#input-field-choiceC-"+(i+1)+"").val() === ""){
+				console.info("Empty");
+				bool = false;
+				$("#exam-danger-alert").show ("fast");
+				setTimeout (function () {
+					$("#exam-danger-alert").hide ("fast");
+				}, 3000);
+				$("#input-field-question-"+(i+1)+"-container").addClass ("has-error");
+				$("#input-field-answer-"+(i+1)+"-container").addClass ("has-error");
+				$("#input-field-choiceA-"+(i+1)+"-container").addClass ("has-error");
+				$("#input-field-choiceB-"+(i+1)+"-container").addClass ("has-error");
+				$("#input-field-choiceC-"+(i+1)+"-container").addClass ("has-error");
+			}else{
+				
+				resetInputFieldColor($("#input-field-question-"+(i+1)+"-container"));
+				resetInputFieldColor($("#input-field-answer-"+(i+1)+"-container"));
+				resetInputFieldColor($("#input-field-choiceA-"+(i+1)+"-container"));
+				resetInputFieldColor($("#input-field-choiceB-"+(i+1)+"-container"));
+				resetInputFieldColor($("#input-field-choiceC-"+(i+1)+"-container"));
+				
+				$("#input-field-question-"+(i+1)+"-container").addClass ("has-success");
+				$("#input-field-answer-"+(i+1)+"-container").addClass ("has-success");
+				$("#input-field-choiceA-"+(i+1)+"-container").addClass ("has-success");
+				$("#input-field-choiceB-"+(i+1)+"-container").addClass ("has-success");
+				$("#input-field-choiceC-"+(i+1)+"-container").addClass ("has-success");
+			}
 		}
 	}
+	return bool;
+}
+
+function getInputValues(arr){
+
+	var data = [];
+	for (var i = 0; i<arr.length;i++){
+		
+		if(arr[i].status != "removed"){
+			var obj = {
+			"question"	:$("#input-field-question-"+(i+1)+"").val(),
+			"answer"	:$("#input-field-answer-"+(i+1)+"").val(),
+			"choiceA"	:$("#input-field-choiceA-"+(i+1)+"").val(),
+			"choiceB"	:$("#input-field-choiceB-"+(i+1)+"").val(),
+			"choiceC"	:$("#input-field-choiceC-"+(i+1)+"").val()
+			};
+			data.push(obj);
+		}
+	}
+	return data;
 }
 /* $("#minus_button").click(function() {
 	questions.pop();
@@ -73,4 +129,3 @@ function getInputs(arr){
 	   console.log(questions[i]);
 	}
 }); */
-
