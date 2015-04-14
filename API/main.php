@@ -92,11 +92,20 @@
 			);
 			$data = JsonSQL::sqlify ($sql);
 			break;
+		
+		case "get_courses_title":
+			$sql = array (
+				"statement" => "select",
+				"columns"   => array ( "*" ),
+				"from"      => array ( "catalog" )
+			);
+			$data = JsonSQL::sqlify ($sql);
+			break;
 
 		case "get_profession":
 			$sql = array (
 				"statement" => "select",
-				"columns"   => array ( "*" ),
+				"columns"   => array ( "category" ),
 				"from"      => array ( "profession" )
 			);
 			$data = JsonSQL::sqlify ($sql);

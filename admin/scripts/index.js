@@ -84,6 +84,7 @@ $("#submit_course").click(function() {
 				
 				resetInputFields ();
 				getDropdownOptions ();
+				getExamDropdownOptions();
 
 				$("#insert-success-alert").show ("fast");
 				setTimeout (function () {
@@ -187,6 +188,7 @@ $("#modify_course").click (function () {
 				
 				resetInputFields ();
 				getDropdownOptions ();
+				getExamDropdownOptions ();
 
 				$("#update-success-alert").show ("fast");
 				setTimeout (function () {
@@ -344,9 +346,6 @@ function urlParse(name) {
 		results = regex.exec(location.search);
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
-
-
 
 /* function preparePage (data){
 	var json = JSON.parse (data);

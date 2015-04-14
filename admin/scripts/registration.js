@@ -174,7 +174,6 @@ function getDropdownOptions() {
 		} else {
 			select_options += '<option>' + json.category + '</option>';
 		}
-
 		$("#existing-registered-profession").html(select_options);
 	});
 }
