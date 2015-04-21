@@ -4,6 +4,7 @@
 	include "MySql.php";
 	include "JsonSQL.php";
 	include "user.php";
+	include "file.class.php";
 
 	define("DB_SERVERNAME", "localhost");
 	define("DB_USERNAME", "root");

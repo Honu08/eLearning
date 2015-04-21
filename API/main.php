@@ -48,6 +48,14 @@
 				.trim($email)."','".trim($phone)."','".trim($username)."','".trim($profession)."',".$date.");";
 			$data = MySql::runOtherQuery ($sql);
 			break;
+		
+		case"course_dir":
+			
+			$title = $_POST['course_title'];
+			$path = "/var/www/html/eLearning/admin/files/".$title;
+			$data = File::createDirectory($path);
+					
+			break;
 
 		case "insert_login":
 			$sql = array (

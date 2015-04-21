@@ -13,38 +13,45 @@ $("#exam-noQuestion-danger-alert").hide ();
 $("#plus_button").click(function() {
 	var x = questions.length+1;
 	var id = "id=\""+x+"\"";
+	var header = "id=\"top_"+x+"\"";
+	var value = "top_"+x+"";
 	var string= "<div "+id+">"+
-				"<div class=\"panel panel-default\" style=\"background-color: #F8F8F8\">"+
-				"<div class=\"panel-heading\" style=\"height: 30px\">"+
-					"<div class=\"form-group\">"+
-						"<button class=\"btn btn-default btn-xs pull-right\" style=\"margin-top: -6px\" id=\"delete_question_"+x+"\">"+
-						"<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\">"+
-						"</button>"+
-					"</div>"+
-				"</div>"+
-				"<div class=\"panel-body\">"+
-					"<div id=\"input-field-question-"+x+"-container\" class=\"form-group input-color-verifier\">"+
-						"<label>Question:</label>"+
-						"<input type=\"textarea\" class=\"form-control\" id=\"input-field-question-"+x+"\" placeholder=\"Enter Question\">"+
-					"</div>"+
-					"<div id=\"input-field-answer-"+x+"-container\" class=\"form-group input-color-verifier\">"+
-						"<label>Correct Answer: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-answer-"+x+"\" placeholder=\"Enter Answer\">"+
-					"</div>"+
-					"<div id=\"input-field-choiceA-"+x+"-container\" class=\"form-group input-color-verifier\">"+
-						"<label>Choice 1: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceA-"+x+"\" placeholder=\"Enter Choice 1\">"+
-					"</div>"+
-					"<div id=\"input-field-choiceB-"+x+"-container\" class=\"form-group input-color-verifier\">"+
-						"<label>Choice 2: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB-"+x+"\" placeholder=\"Enter Choice 2\">"+
-					"</div>"+
-					"<div id=\"input-field-choiceC-"+x+"-container\" class=\"form-group input-color-verifier\">"+
-						"<label>Choice 3: </label>"+
-						"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC-"+x+"\" placeholder=\"Enter Choice 3\">"+
-					"</div>"+
-				"</div>"+
-				"</div>"+"<hr class=\"featurette-divider\">"+
+					"<div class=\"panel panel-default\" style=\"background-color: #F8F8F8\">"+
+							"<div class=\"panel-heading\"  style=\"height: 40px\">"+
+								"<div class=\"form-group\">"+
+									"<button data-toggle=\"collapse\" class=\"btn btn-default btn-xs\"  data-parent=\"#accordion\" href=\"#collapse"+x+"\">"+
+										"<span class=\"glyphicon glyphicon-list\" aria-hidden=\"true\">"+
+									"</button>"+"&nbsp;&nbsp;&nbsp;<strong id=\""+value+"\"></strong>"+
+									"<button class=\"btn btn-danger btn-xs pull-right\" style=\"margin-top: -2px\" id=\"delete_question_"+x+"\">"+
+										"<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\">"+
+									"</button>"+
+								"</div>"+
+							"</div>"+
+							"<div id=\"collapse"+x+"\" class=\"panel-collapse collapse in\">"+
+								"<div class=\"panel-body\">"+
+									"<div id=\"input-field-question-"+x+"-container\" class=\"form-group input-color-verifier\">"+
+										"<label>Question:</label>"+
+										"<input type=\"text\" class=\"form-control\" id=\"input-field-question-"+x+"\" placeholder=\"Enter Question\">"+
+									"</div>"+
+									"<div id=\"input-field-answer-"+x+"-container\" class=\"form-group input-color-verifier\">"+
+										"<label>Correct Answer: </label>"+
+										"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-answer-"+x+"\" placeholder=\"Enter Answer\">"+
+									"</div>"+
+									"<div id=\"input-field-choiceA-"+x+"-container\" class=\"form-group input-color-verifier\">"+
+										"<label>Choice 1: </label>"+
+										"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceA-"+x+"\" placeholder=\"Enter Choice 1\">"+
+									"</div>"+
+									"<div id=\"input-field-choiceB-"+x+"-container\" class=\"form-group input-color-verifier\">"+
+										"<label>Choice 2: </label>"+
+										"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB-"+x+"\" placeholder=\"Enter Choice 2\">"+
+									"</div>"+
+									"<div id=\"input-field-choiceC-"+x+"-container\" class=\"form-group input-color-verifier\">"+
+										"<label>Choice 3: </label>"+
+										"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC-"+x+"\" placeholder=\"Enter Choice 3\">"+
+									"</div>"+
+								"</div>"+
+							"</div>"+
+					"</div>"+"<hr class=\"featurette-divider\">"+
 				"</div>"+
 				"<script>"+
 					"$(\"#delete_question_"+x+"\").click(function() {"+
@@ -54,16 +61,25 @@ $("#plus_button").click(function() {
 						"var temp = \"Questions:\"+ index;"+
 						"$(\"#footer\").html(temp);"+
 					"});"+
+					"$( \"#input-field-question-"+x+"\").keyup(function(e){"+
+						"var text = $(\"#input-field-question-"+x+"\").val();"+
+					  		"$(\"#"+value+"\").html(text);"+
+							"if(text.length > 45){"+
+								"text = text.substring(0, 48 - 1);"+
+								"text += \"...\";"+
+								"$(\"#"+value+"\").html(text);"+
+							"}"+
+					"});"+
 				"</script>";
-	var obj= {"html":string,"status":"added"};
+	var obj = {"html":string,"status":"added"};
 	questions.push (obj);
 	
 	if(questions.length === 1){
-	$("#questions").html (null);
+	$("#accordion").html (null);
 	}
-	$("#questions").append (string);
+	$("#accordion").prepend(string);
 	index++;
-	var test = "Questions: "+index;
+	var test = "Questions: "+index+"";
 	$("#footer").html(test);
 });
 
@@ -74,13 +90,11 @@ $("#insert_exam").click(function(){
 	var payload = [];
 	var exam = {};
 	bool = getInputs(questions);
-	bool2 = getTitle();
-	bool1 = getSelectedTitle();
-	if(bool && bool2 && bool1){
+	if(bool){
 		payload = getInputValues(questions);
 		if(checkArray(payload)){
 			exam = {"course":$("#existing-registered-courses-title").val(),
-				   	"title":$("#input-field-exam-title").val(),
+				   	"title" :$("#input-field-exam-title").val(),
 					"questions":payload
 				   };
 			modal(exam);
@@ -148,8 +162,9 @@ function modal(arr){
 			},
 			callback: function(result) {
 				if (result) {
-					bool = true;
-				}else{bool = false;}
+					var outApi = {"task":"insert_exam", "exam":arr};
+					console.info(JSON.stringify(outApi));
+				}
 			}
 		});
 	});
@@ -176,6 +191,7 @@ function getInputs(arr){
 				$("#input-field-choiceC-"+(i+1)+"-container").addClass ("has-error");
 				
 			}else{
+				
 				resetInputFieldColor($("#input-field-question-"+(i+1)+"-container"));
 				resetInputFieldColor($("#input-field-answer-"+(i+1)+"-container"));
 				resetInputFieldColor($("#input-field-choiceA-"+(i+1)+"-container"));
@@ -212,10 +228,9 @@ function getInputValues(arr){
 
 function msg(arr){
 	var string = "<h4>Course: "+arr.course+"</h4>"+
-				 "<h4>Exam title: "+arr.title+"</h4>"+
 				 "<h4>Questions:</h4>";
 	for(var i = 0; i<arr.questions.length; i++){
-		string += "<p>"+(i+1)+") "+arr.questions[i].question+"<br>";
+		string += ""+(i+1)+")"+arr.questions[i].question+"";
 		string += "<ul style=\"list-style-type:circle\">"+
 				  "<li> Answer  : "+arr.questions[i].answer+"</li>"+
 				  "<li> Choice A: "+arr.questions[i].choiceA+"</li>"+

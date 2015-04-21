@@ -78,6 +78,16 @@ $("#submit_course").click(function() {
 			var json = JSON.parse (data);
 
 			if (json.success === true) {
+				
+				//make dir
+				performAjax({
+					"task": "course_dir",
+					"course_title" : input_values[2],
+				}, function(data){
+					var json = JSON.parse (data);
+					console.info(data);
+				});
+				
 				performAjax({
 					"task": "get_courses"
 				}, printCoursesFunction);
