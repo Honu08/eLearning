@@ -53,6 +53,15 @@
                 return array ("success" => false);
             }
         }
+		
+		 public function delFile ($path) {
+                $unlink = unlink ($path);           
+                if($unlink) {
+                    return array ("success" => true);
+                } else {
+                    return array ("success" => false);
+                }
+        }
         
         /*
          *  Reads contents from file

@@ -7,6 +7,11 @@
 		case "test_connection":
 			$data = MySql::connectToMySQL(); 
 			// $data["post"] = $_POST[ "task"]; 
+			break;
+		
+		case "upload_file":
+			//$data = Upload::addFile($_POST["file"]); 
+			// $data["post"] = $_POST[ "task"]; 
 			break; 
 		
 		case "insert_course": 
@@ -28,9 +33,7 @@
 			break;
 		
 		case"user_login":
-		
 			$data = user::userLogin($_POST['username'], $_POST['password']);
-					
 			break;
 
 		case "insert_user": 
@@ -51,10 +54,38 @@
 		
 		case"course_dir":
 			
-			$title = $_POST['course_title'];
-			$path = "/var/www/html/eLearning/admin/files/".$title;
-			$data = File::createDirectory($path);
-					
+			$code	= $_POST['course_code'];
+			$id 	= MySql::runSelectQuery("SELECT id FROM catalog WHERE code = '".$code."' ");
+			$path 	= "/var/www/html/eLearning/admin/files/".$id[0]['id'];
+			$data1 	= File::createDirectory($path);
+ 			if($data1){
+			$sql 	= "UPDATE catalog SET path = '".$path."'   WHERE id = '".$id[0]['id']."' ";
+			$data 	= MySql::runOtherQuery($sql);
+			}else{$data = false;}
+		
+			break;
+		
+		case"scan_dir":
+			$list = array();
+ 			$title	= $_POST['course_title'];
+			$struc 	= MySql::runSelectQuery("SELECT path FROM catalog WHERE title = '".$title."' ");
+			$id 	= MySql::runSelectQuery("SELECT id FROM catalog WHERE title = '".$title."' ");
+			$path 	= $struc[0]['path'];
+			$files 	= File::listFilesInsidePath($path);
+		
+			foreach($files as $names){
+				if($names != "." && $names != ".."){
+					$obj = array ("file"=>$names, "path"=>$id[0]['id']."/".$names);
+					array_push($list, $obj);
+				}
+			}
+			$data = array("list" => $list, "fullPath" => $path ) ; 
+			break;
+		
+		case"del_file":
+ 			$file	= $_POST['file'];
+			$path 	= $struc[0]['path'];
+			$data 	= File::delFile($file);
 			break;
 
 		case "insert_login":

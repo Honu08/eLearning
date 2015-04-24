@@ -5,7 +5,6 @@ class user{
 		$session  = null;
 		$sql= "SELECT COUNT(*) AS value, role FROM login WHERE username='".$username."' AND password='".$password."';";
 		$data = MySql::runSelectQuery ($sql);
-
 		if($data[0]["value"] == 0){
 			array_push($payload, array("role"=>"invalid"));
 		}else{
