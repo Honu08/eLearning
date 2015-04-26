@@ -82,7 +82,7 @@ $("#submit_course").click(function() {
 				//make dir
 				performAjax({
 					"task": "course_dir",
-					"course_title" : input_values[2],
+					"course_code" : input_values[0],
 				}, function(data){
 					var json = JSON.parse (data);
 					console.info(data);
@@ -95,6 +95,7 @@ $("#submit_course").click(function() {
 				resetInputFields ();
 				getDropdownOptions ();
 				getExamDropdownOptions();
+				getFileDropdownOptions();
 
 				$("#insert-success-alert").show ("fast");
 				setTimeout (function () {
@@ -199,7 +200,8 @@ $("#modify_course").click (function () {
 				resetInputFields ();
 				getDropdownOptions ();
 				getExamDropdownOptions ();
-
+				getFileDropdownOptions();
+				
 				$("#update-success-alert").show ("fast");
 				setTimeout (function () {
 					$("#update-success-alert").hide ("fast");
@@ -380,4 +382,3 @@ function urlParse(name) {
 	COLUMN_NAMES = json;
 }
  */
-

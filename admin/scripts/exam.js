@@ -89,8 +89,9 @@ $("#insert_exam").click(function(){
 	var bool2 = null;
 	var payload = [];
 	var exam = {};
+	bool1 = getSelectedTitle();
 	bool = getInputs(questions);
-	if(bool){
+	if(bool && bool1){
 		payload = getInputValues(questions);
 		if(checkArray(payload)){
 			exam = {"course":$("#existing-registered-courses-title").val(),
