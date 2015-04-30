@@ -1,4 +1,5 @@
 var INPUT_FIELDS = ["#input-field-username", "#input-field-password"];
+USER_NAME = "";
 
 $("#login-error-alert").hide ();
 
@@ -45,10 +46,12 @@ $("#login_button").click(function() {
 				if(json[0].role === "admin"){
 					console.info(json[0].role);
 					window.location.href = "admin.html" + "?session=" + json[0].session;
+					USER_NAME = username;
 				}else{
 					if(json[0].role === "user"){
 					console.info(json[0].role);
 					window.location.href = "user.html" + "?session=" + json[0].session;
+					USER_NAME = username;
 					}
 				}
 			}
@@ -77,3 +80,10 @@ function performAjax(data, callback) {
 function errorFunction(data) {
 	console.info(data.text);
 }
+
+
+
+
+
+
+

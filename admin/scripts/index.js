@@ -262,8 +262,7 @@ function getDropdownOptions () {
 		} else {
 			select_options += '<option>' + json.code + '</option>';
 		}
-
-		$("#existing-registered-courses").html (select_options);	
+		$("#existing-registered-courses").html (select_options);
 	});
 }
 
@@ -322,7 +321,6 @@ function deleteSuccessFunction(data) {
 function printCoursesFunction (data) {
 	var json = JSON.parse (data);
 	// console.info(JSON.stringify (json));
-	
 	var table_content = "";
 	var fields = ["code", "title", "desc", "active", "price"];
 	
@@ -348,6 +346,7 @@ function printCoursesFunction (data) {
 	}
 	$("#course-table-body").html (table_content);
 }
+
 function errorFunction(data) {
 	console.info(data.text);
 }

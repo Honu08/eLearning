@@ -32,6 +32,21 @@
 			$data = JsonSQL::sqlify ($sql);
 			break;
 		
+		case "add_questions":
+			$payload = $_POST['payload'];
+			$code    = MySql::runSelectQuery("SELECT code FROM catalog WHERE title = '".$payload['course']."';");
+			
+			foreach($payload['questions'] as $question ){
+				$check = MySql::runSelectQuery("SELECT COUNT(*) AS count FROM questions WHERE question = '".$question['question']."';");
+				if($check[0]['count'] == 0){
+					$query = "INSERT INTO questions VALUES (NULL,'".$code[0]['code']."', '".$question['question']."', '".
+							$question['answer']."', '".$question['choiceA']."', '".
+							$question['choiceB']."', '".$question['choiceC']."');";
+					$data .= MySql::runOtherQuery($query);
+				}
+			}
+			break;
+		
 		case"user_login":
 			$data = user::userLogin($_POST['username'], $_POST['password']);
 			break;
@@ -123,6 +138,23 @@
 			$data = JsonSQL::sqlify ($sql);
 			break;
 
+		case "get_pool_info":
+			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course_title']."';");
+			$sql = "SELECT * FROM questions WHERE code = '".$code[0]['code']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
+		case "get_pool_questions":
+			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course_title']."';");
+			$sql = "SELECT question FROM questions WHERE code = '".$code[0]['code']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
+		case "get_question_info":
+			$sql = "SELECT * FROM questions WHERE question = '".$_POST['question']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
 		case "get_courses":
 			$sql = array (
 				"statement" => "select",

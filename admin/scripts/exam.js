@@ -8,6 +8,7 @@ $("#exam-danger-alert").hide ();
 $("#exam-select-danger-alert").hide ();
 $("#exam-title-danger-alert").hide ();
 $("#exam-noQuestion-danger-alert").hide ();
+$("#question-danger-alert").hide ();
 
 
 $("#plus_button").click(function() {
@@ -20,7 +21,7 @@ $("#plus_button").click(function() {
 							"<div class=\"panel-heading\"  style=\"height: 40px\">"+
 								"<div class=\"form-group\">"+
 									"<button data-toggle=\"collapse\" class=\"btn btn-default btn-xs\"  data-parent=\"#accordion\" href=\"#collapse"+x+"\">"+
-										"<span class=\"glyphicon glyphicon-list\" aria-hidden=\"true\">"+
+										"<span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\">"+
 									"</button>"+"&nbsp;&nbsp;&nbsp;<strong id=\""+value+"\"></strong>"+
 									"<button class=\"btn btn-danger btn-xs pull-right\" style=\"margin-top: -2px\" id=\"delete_question_"+x+"\">"+
 										"<span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\">"+
@@ -95,7 +96,6 @@ $("#insert_exam").click(function(){
 		payload = getInputValues(questions);
 		if(checkArray(payload)){
 			exam = {"course":$("#existing-registered-courses-title").val(),
-				   	"title" :$("#input-field-exam-title").val(),
 					"questions":payload
 				   };
 			modal(exam);
@@ -163,8 +163,16 @@ function modal(arr){
 			},
 			callback: function(result) {
 				if (result) {
-					var outApi = {"task":"insert_exam", "exam":arr};
-					console.info(JSON.stringify(outApi));
+					var outApi = {"task":"add_questions", "payload": arr};
+					performAjax(outApi, function(data){
+						var json= JSON.parse(data);
+						console.info(JSON.stringify(json));
+						$("#accordion").html (null);
+						$("#accordion").text ("Press the plus sign button to add a question.");
+						getExamDropdownOptions ();
+						$("#select-question-edit").html (null);
+						questions = [];
+					});
 				}
 			}
 		});
@@ -254,13 +262,195 @@ function getExamDropdownOptions () {
 		} else {
 			select_options += '<option>' + json.title + '</option>';
 		}
-		$("#existing-registered-courses-title").html (select_options);	
+		$("#existing-registered-courses-title").html (select_options);
+		$("#select-course-pool").html (select_options);
 	});
 }
 
-/* $("#minus_button").click(function() {
-	questions.pop();
-	for (var i = 0; i < questions.lenth; i++){
-	   console.log(questions[i]);
+function getSelectQuestions (data) {
+		var json = JSON.parse (data);
+		var select_options = '<option disabled selected=true>Choose a Question</option>';
+		if (json.constructor === Array) {
+			for (var i = 0; i < json.length; i++) {
+				select_options += '<option>' + json[i].question + '</option>';
+			}
+		} else {
+			select_options += '<option>' + json.question + '</option>';
+		}
+		
+		$("#select-question-edit").html (select_options);
+	
+}
+
+function printQuestionsFunction (data) {
+	var json = JSON.parse (data);
+	// console.info(JSON.stringify (json));
+	var table_content = "";
+	var fields = ["question", "answer", "choiceA", "choiceB", "choiceC"];
+	
+	if (json.constructor === Array) {
+		for (var j = 0; j < json.length; j++) {
+			table_content += "<tr>";
+			for (var z = 0; z < fields.length; z++) {
+				if(z===0){
+					table_content += "<td>" + json[j][fields[z]] + "</a></td>"; 
+				}
+				else{
+					table_content += "<td>" + json[j][fields[z]] + "</td>";
+				}
+			}
+			table_content += "</tr>";
+		}
+	} else {
+		table_content += "<tr>";
+		for (var i = 0; i < fields.length; i++) {
+			table_content += "<td>" + json[fields[i]] + "</td>";
+		}
+		table_content += "</tr>";
 	}
-}); */
+	$("#question-table-body").html (table_content);
+}
+
+$("#select-course-pool").change (function () {
+	//get question pool table content
+	performAjax ({
+		"task" : "get_pool_info",
+		"course_title" : $(this).val ()
+	},printQuestionsFunction);
+	
+	performAjax ({
+		"task" : "get_pool_questions",
+		"course_title" : $(this).val ()
+	},getSelectQuestions);
+	
+	$("#question-edit-fields").html (null);
+});
+
+$("#select-question-edit").change (function () {
+	
+	var fields = "<div id=\"input-field-question-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Question:</label>"+
+					"<input type=\"text\" class=\"form-control\" id=\"input-field-question\" placeholder=\"Enter Question\">"+
+				"</div>"+
+				"<div id=\"input-field-answer-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Correct Answer: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-answer\" placeholder=\"Enter Answer\">"+
+				"</div>"+
+				"<div id=\"input-field-choiceA-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Choice 1: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceA\" placeholder=\"Enter Choice 1\">"+
+				"</div>"+
+				"<div id=\"input-field-choiceB-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Choice 2: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB\" placeholder=\"Enter Choice 2\">"+
+				"</div>"+
+				"<div id=\"input-field-choiceC-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Choice 3: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC\" placeholder=\"Enter Choice 3\">"+
+				"</div>"+
+				"<input id=\"input-checkbox-question-active\" type=\"checkbox\" name=\"active-checkbox\" value=\"1\">&nbsp;&nbsp;Currently Active";
+	
+	$("#question-edit-fields").html (fields);
+	
+	performAjax ({
+		"task" : "get_question_info",
+		"question" : $(this).val ()
+	}, function (data) {
+		var json = JSON.parse (data);
+		console.info (JSON.stringify (json));
+		
+		$("#input-field-question").val (json[0].question);
+		$("#input-field-answer").val (json[0].answer);
+		$("#input-field-choiceA").val (json[0].choiceA);
+		$("#input-field-choiceB").val (json[0].choiceB);
+		$("#input-field-choiceC").val (json[0].choiceC);
+		
+/* 		if (parseInt (json.active) === 1) { 
+			$("#input-checkbox-question-active").prop ("checked", true);
+		} else {
+			$("#input-checkbox-question-active").prop ("checked", false);
+		} */
+	});
+	
+	$("#question-edit-fields").html (fields);
+});
+
+
+$("#edit_question").click(function(){
+	
+	var valid = true;
+	var payload = [];
+	var input_values = [];
+	var compare = [];
+	
+	var INPUT_FIELDS = [
+		"#input-field-question",
+		"#input-field-answer",
+		"#input-field-choiceA",
+		"#input-field-choiceB",
+		"#input-field-choiceC"];
+	
+	// Get values for all input text fields and validate at the same time
+	for (var i = 0; i < INPUT_FIELDS.length; i++) {
+		resetInputFieldColor($(INPUT_FIELDS[i] + '-container'));
+		if ($(INPUT_FIELDS[i]).val() === "") {
+			$(INPUT_FIELDS[i] + '-container').addClass("has-error");
+ 			$("#question-danger-alert").show("fast");
+			setTimeout(function() {
+				$("#question-danger-alert").hide("fast");
+			}, 5000);
+			valid = false;
+		} else {
+			$(INPUT_FIELDS[i] + '-container').addClass("has-success");
+			input_values.push($(INPUT_FIELDS[i]).val());
+		}
+	}
+
+	console.info(input_values);
+	if(valid){
+		performAjax ({
+			"task" : "get_question_info",
+			"question" : $("#select-question-edit").val ()
+		}, function (data) {
+			var json = JSON.parse (data);
+			console.info (JSON.stringify (json));
+			var values = [json[0].question,
+						  json[0].answer,
+						  json[0].choiceA,
+						  json[0].choiceB,
+						  json[0].choiceC];
+
+			console.info (JSON.stringify (values));
+	/* 		if (parseInt (json.active) === 1) { 
+				$("#input-checkbox-question-active").prop ("checked", true);
+			} else {
+				$("#input-checkbox-question-active").prop ("checked", false);
+			} */
+			//verify if no change is added to the question
+			
+			for(var i = 0; i < values.length; i++){
+				if(input_values[i] == values[i]){
+
+				}
+				
+			}
+		});
+	}
+	
+	//$("#question-edit-fields").html (null);
+});
+
+function verifyQuestionChange(param) {
+	var validuser = null;
+	performSajax({
+		"task": "exist_user",
+		"user_name": param
+	}, function(data) {
+		var json = JSON.parse(data);
+		validuser = json.exists;
+	});
+	return validuser;
+}
+
+
+
