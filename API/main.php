@@ -41,10 +41,18 @@
 				if($check[0]['count'] == 0){
 					$query = "INSERT INTO questions VALUES (NULL,'".$code[0]['code']."', '".$question['question']."', '".
 							$question['answer']."', '".$question['choiceA']."', '".
-							$question['choiceB']."', '".$question['choiceC']."');";
+							$question['choiceB']."', '".$question['choiceC']."', 1)";
 					$data .= MySql::runOtherQuery($query);
 				}
 			}
+			break;
+		
+		case "update_question":
+		 
+			$data = MySql::runOtherQuery("UPDATE questions SET question = '".$_POST['question'][0]."', answer = '".$_POST['question'][1].
+											"', choiceA = '".$_POST['question'][2]."', choiceB = '".$_POST['question'][3].
+											"', choiceC = '".$_POST['question'][4]."', active = '".$_POST['question'][5].
+										 	"' WHERE id = '".$_POST['id']."';");
 			break;
 		
 		case"user_login":

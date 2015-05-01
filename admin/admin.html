@@ -10,6 +10,19 @@
         <title>Admin</title>
     </head>
 	<body>
+			<div class="container" id="header-container">
+				 <div class="row">
+					 <div class="col-md-4">
+						 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program
+					 </div>
+					 <div class="col-md-4">
+						 <strong style="font-size: 30px;">CNDPR</strong> Colegio Nutricionista y Dietistas de Puerto Rico
+					 </div>
+					 <div class="col-md-4">
+<!-- 						 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program -->
+					 </div>
+				</div>
+		    </div>
 			<div class="main-container" id="page-container">
 			<h2 id="header-title">
 				Administration Portal
@@ -243,7 +256,7 @@
             						<div>
 										<div class="panel-footer">
 											<button class="btn btn-primary " id="insert_exam">
-												<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;&nbsp;Insert 
+												<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;&nbsp;Insert to pool 
 											</button>
 											<button class="btn btn-default pull-right" type="button" id="plus_button" >
 												<span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;&nbsp;&nbsp;Add question
@@ -293,6 +306,12 @@
 										<div id="question-danger-alert" class="alert alert-danger" role="alert">
 											<strong>Error!</strong> Something is missing, check question fields.
 										</div>
+										<div id="nochange-success-alert" class="alert alert-success" role="alert">
+											<strong> No change over the question..</strong>
+										</div>
+										<div id="change-success-alert" class="alert alert-success" role="alert">
+											<strong> Update Successfully</strong>
+										</div>
 										<div id="question-edit-fields">
 											
 										</div>
@@ -315,6 +334,7 @@
 													<th>Choice A</th>
 													<th>Choice B</th>
 													<th>Choice C</th>
+													<th>Active</th>
 												</tr>
 											</thead>
 											<tbody id="question-table-body">

@@ -9,6 +9,8 @@ $("#exam-select-danger-alert").hide ();
 $("#exam-title-danger-alert").hide ();
 $("#exam-noQuestion-danger-alert").hide ();
 $("#question-danger-alert").hide ();
+$("#nochange-success-alert").hide ();
+$("#change-success-alert").hide ();
 
 
 $("#plus_button").click(function() {
@@ -248,6 +250,17 @@ function msg(arr){
 	}
 	return string;
 }
+function msg2(arr){
+	var string = "<h4>Course: "+$("#select-course-pool").val()+"</h4>"+
+				 "<h4>Update Question:</h4>";
+		string += ""+1+")"+arr[0]+"";
+		string += "<ul style=\"list-style-type:circle\">"+
+				  "<li> Answer  : "+arr[1]+"</li>"+
+				  "<li> Choice A: "+arr[2]+"</li>"+
+				  "<li> Choice B: "+arr[3]+"</li>"+
+				  "<li> Choice C: "+arr[4]+"</li></ul>";
+	return string;
+}
 
 function getExamDropdownOptions () {
 	performAjax({
@@ -286,7 +299,7 @@ function printQuestionsFunction (data) {
 	var json = JSON.parse (data);
 	// console.info(JSON.stringify (json));
 	var table_content = "";
-	var fields = ["question", "answer", "choiceA", "choiceB", "choiceC"];
+	var fields = ["question", "answer", "choiceA", "choiceB", "choiceC", "active"];
 	
 	if (json.constructor === Array) {
 		for (var j = 0; j < json.length; j++) {
@@ -365,11 +378,11 @@ $("#select-question-edit").change (function () {
 		$("#input-field-choiceB").val (json[0].choiceB);
 		$("#input-field-choiceC").val (json[0].choiceC);
 		
-/* 		if (parseInt (json.active) === 1) { 
+		if (parseInt (json[0].active) === 1) { 
 			$("#input-checkbox-question-active").prop ("checked", true);
 		} else {
 			$("#input-checkbox-question-active").prop ("checked", false);
-		} */
+		} 
 	});
 	
 	$("#question-edit-fields").html (fields);
@@ -406,7 +419,15 @@ $("#edit_question").click(function(){
 		}
 	}
 
+	// Check whether active checkbox is checked or not
+	if ($("#input-checkbox-question-active").is (":checked")) {
+		input_values.push (1);
+	} else {
+		input_values.push (0);
+	}			
+
 	console.info(input_values);
+	//get questions values from database and compare with the input values
 	if(valid){
 		performAjax ({
 			"task" : "get_question_info",
@@ -414,30 +435,84 @@ $("#edit_question").click(function(){
 		}, function (data) {
 			var json = JSON.parse (data);
 			console.info (JSON.stringify (json));
+			var quest_id = json[0].id;
 			var values = [json[0].question,
 						  json[0].answer,
 						  json[0].choiceA,
 						  json[0].choiceB,
-						  json[0].choiceC];
+						  json[0].choiceC,
+						  json[0].active];
 
-			console.info (JSON.stringify (values));
+			console.info (quest_id);
 	/* 		if (parseInt (json.active) === 1) { 
 				$("#input-checkbox-question-active").prop ("checked", true);
 			} else {
 				$("#input-checkbox-question-active").prop ("checked", false);
 			} */
 			//verify if no change is added to the question
-			
+			var index = 0;
 			for(var i = 0; i < values.length; i++){
 				if(input_values[i] == values[i]){
-
+					console.info(input_values[i], "==", values[i]);
+					index ++;
+				}else{
+					console.info(input_values[i], "!==", values[i]);
 				}
-				
 			}
+			// if they are equals do nothing erase content and show message for 5 seconds
+			 if(index === values.length){
+				$("#question-edit-fields").html(null);
+				 $("#nochange-success-alert").show("fast");
+					setTimeout(function() {
+						$("#nochange-success-alert").hide("fast");
+					}, 5000);
+				valid = false;
+			 }else{
+				 // else update question on database
+				 performAjax({
+					 		"task":"update_question",
+					 		"id": quest_id, 
+					 		"question":input_values
+				 },function(data){
+					 var json = JSON.parse (data);
+					 if(json.success){
+						 //get and print content on table for selected course and showw success alert
+						$.getScript("scripts/bootbox.min.js", function() {
+							bootbox.confirm({
+								title: '<h2>Are you sure?</h2>',
+								message:msg2(input_values),
+								buttons: {
+									'cancel': {
+										label: 'No',
+										className: 'btn-danger pull-left'
+									},
+									'confirm': {
+										label: 'Yes',
+										className: 'btn-primary pull-right'
+									}
+								},
+								callback: function(result) {
+									if (result) {
+										 performAjax ({
+											"task" : "get_pool_info",
+											"course_title" : $("#select-course-pool").val ()
+										},printQuestionsFunction);
+										$("#question-edit-fields").html(null);
+										$("#change-success-alert").show("fast");
+										setTimeout(function() {
+											$("#change-success-alert").hide("fast");
+										}, 5000);
+									}
+								}
+							});
+						});
+					 }
+				 });
+			 }
 		});
 	}
 	
-	//$("#question-edit-fields").html (null);
+	
 });
 
 function verifyQuestionChange(param) {
