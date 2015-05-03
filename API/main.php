@@ -9,10 +9,35 @@
 			// $data["post"] = $_POST[ "task"]; 
 			break;
 		
-		case "upload_file":
-			//$data = Upload::addFile($_POST["file"]); 
-			// $data["post"] = $_POST[ "task"]; 
-			break; 
+		case "valid_session":
+			$id = $_POST['session'];
+			if (JsonSQL::rowExists ("session", $id, "sessions")) {
+				$data = array ( "exists" => true );
+			} else {
+				$data = array ( "exists" => false );
+			}		
+			
+			break;
+		
+		case "get_username":
+			$id = $_POST['session'];
+			$sql = "SELECT username FROM sessions WHERE session = '".$id."';";
+			$username = MySql::runSelectQuery($sql);
+			$sql = "SELECT * FROM users WHERE username = '".$username[0]['username']."';";
+			$data = MySql::runSelectQuery($sql);
+			
+			break;
+		
+		case "delete_session":
+			$sql = array (
+				"statement" => "delete",
+				"from"  => "sessions",
+				"where" => array (
+					"=" => array ( "session" => $_POST["session"] )
+				)
+			);
+			$data = JsonSQL::sqlify ($sql);
+			break;
 		
 		case "insert_course": 
 			$sql = array (

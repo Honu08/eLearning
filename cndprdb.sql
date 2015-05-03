@@ -48,8 +48,8 @@ CREATE TABLE `login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE `questions`(
-	CREATE TABLE `questions` (
+
+CREATE TABLE `questions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(250) NOT NULL,
   `question` varchar(250) NOT NULL,
@@ -60,6 +60,15 @@ CREATE TABLE `questions`(
    UNIQUE KEY `id` (`id`),
    FOREIGN KEY (`code`) REFERENCES `catalog` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `sessions` (
+  `username` varchar(250) NOT NULL,
+ `session` varchar(250) NOT NULL,
+  `time` date NOT NULL,
+   FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+	
+ `username` varchar(250) NOT NULL,
 --
 -- Dumping data for table `login`
 --

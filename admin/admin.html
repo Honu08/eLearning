@@ -3,6 +3,9 @@
     <head>
         <link rel="stylesheet" type="text/css" href="stylesheet.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- jQuery JavaScript library -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="scripts/valid.js"></script>
 		<!-- Bootstrap CSS library -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<!-- Custom CSS library -->
@@ -11,18 +14,23 @@
     </head>
 	<body>
 			<div class="container" id="header-container">
-				 <div class="row">
-					 <div class="col-md-4">
-						 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program
-					 </div>
-					 <div class="col-md-4">
-						 <strong style="font-size: 30px;">CNDPR</strong> Colegio Nutricionista y Dietistas de Puerto Rico
-					 </div>
-					 <div class="col-md-4">
-<!-- 						 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program -->
+				 <div class="row" >
+					 <div class="panel panel-default">
+						<div class="panel-heading" >
+							 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program
+							<div class="btn-group  pull-right">
+								 <button class="btn btn-primary dropdown-toggle" id="user_button" data-toggle="dropdown" aria-expanded="false">
+									 <span  type="button" class="glyphicon glyphicon-user" aria-hidden="true"></span> <span id="username">&nbsp;&nbsp;Username</span> <span class="caret"></span>
+								 </button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#">Logout</a></li>
+								</ul>
+							</div>
+						 </div>
 					 </div>
 				</div>
 		    </div>
+		
 			<div class="main-container" id="page-container">
 			<h2 id="header-title">
 				Administration Portal
@@ -31,16 +39,20 @@
             <div role="tabpanel">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Courses</a></li>
-					<li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Exams <b class="caret"></b></a>
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+						<span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;&nbsp;Courses</a></li>
+					<li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;&nbsp;Exams <b class="caret"></b></a>
 						<ul class="dropdown-menu" >
 							<li><a data-toggle="tab" href="#dropdown1" style="font-size: 14px;">Add Questions</a></li>
 							<li><a data-toggle="tab" href="#dropdown2" style="font-size: 14px;">Modify Questions</a></li>
 							<li><a data-toggle="tab" href="#dropdown3" style="font-size: 14px;">Create Exam</a></li>
 						</ul>
         			</li>
-                    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Files</a></li>
-					<li role="presentation"><a href="#userMant" aria-controls="userMant" role="tab" data-toggle="tab">User Maintenance</a></li>
+                    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">
+						<span class="glyphicon glyphicon-level-up" aria-hidden="true"></span>&nbsp;&nbsp;Files</a></li>
+					<li role="presentation"><a href="#userMant" aria-controls="userMant" role="tab" data-toggle="tab">
+						<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>&nbsp;&nbsp;User Maintenance</a></li>
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
@@ -356,8 +368,6 @@
             </div>
 
 		</div>
-		<!-- jQuery JavaScript library -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<!-- Bootstrap JavaScript library -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<!-- Custom JavaScript library -->

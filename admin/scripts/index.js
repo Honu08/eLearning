@@ -2,6 +2,8 @@ var SET_DROPDOWN_OPTIONS = false;
 
 var SESSION = urlParse("session");
 			console.info(SESSION);
+getUsername();
+	
 var INPUT_FIELDS = [
 		"#input-field-code",
 		"#input-field-type",
@@ -38,6 +40,7 @@ function performAjax(data, callback) {
 		error: errorFunction
 	});
 }
+
 
 $("#submit_course").click(function() {
 	var validated    = true;
@@ -351,12 +354,24 @@ function errorFunction(data) {
 	console.info(data.text);
 }
 
+function getUsername(){
+	
+	performAjax({"task":"get_username",
+				 "session":SESSION},function(data){
+		var json = JSON.parse(data);
+		console.info(data);
+		$("#username").html("&nbsp;&nbsp;"+json[0].name+"&nbsp;"+json[0].lastName+"&nbsp;&nbsp;");
+	});
+	
+}
+
 function urlParse(name) {
 	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 		results = regex.exec(location.search);
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
 
 /* function preparePage (data){
 	var json = JSON.parse (data);
