@@ -1,9 +1,11 @@
 var questions = [];
+var CHECK = null;
 var index = 0;
 var title = $("#input-field-exam-title").val();
 
 getExamDropdownOptions();
 
+ 
 $("#exam-danger-alert").hide ();
 $("#exam-select-danger-alert").hide ();
 $("#exam-title-danger-alert").hide ();
@@ -14,6 +16,7 @@ $("#change-success-alert").hide ();
 $("#exam-create-select-danger-alert").hide ();
 $("#exam-quantity-danger-alert").hide ();
 $("#exam-quantity-exede-danger-alert").hide ();
+$("#exam-exits-danger-alert").hide ();
 
 
 
@@ -282,6 +285,7 @@ function getExamDropdownOptions () {
 		$("#existing-registered-courses-title").html (select_options);
 		$("#select-course-pool").html (select_options);
 		$("#select-exam-course").html (select_options);
+		$("#select-modify-exam").html (select_options);
 	});
 }
 
@@ -564,6 +568,19 @@ $("#input-field-modify-exams").keydown(function (e) {
         }
 });
 
+function getSelectedTitleModifyExam(){
+	var bool = true;
+	var title = $("#select-modify-exam").val();
+	if(title === null){
+		bool = false;
+		$("#exam-create-select-danger-alert").show ("fast");
+			setTimeout (function () {
+				$("#exam-create-select-danger-alert").hide ("fast");
+			}, 3000);
+	}
+	return bool;
+}
+
 function getSelectedTitleExam(){
 	var bool = true;
 	var title = $("#select-exam-course").val();
@@ -598,55 +615,67 @@ $("#create_exam").click(function(){
 	
 	if(bool){
 		performAjax({
-			"task":"verify_count",
-			"course": $("#select-exam-course").val()
-		}, function(data){
-			var json = JSON.parse(data);
-			
-			if( $("#input-field-exam-quantity").val() <= json[0].size ){
-				$.getScript("scripts/bootbox.min.js", function() {
-					bootbox.confirm({
-						title: '<h2>Are you sure?</h2>',
-						message: "Create exam",
-						buttons: {
-							'cancel': {
-								label: 'No',
-								className: 'btn-danger pull-left'
-							},
-							'confirm': {
-								label: 'Yes',
-								className: 'btn-primary pull-right'
-							}
-						},
-						callback: function(result) {
-							if (result) {
-								performAjax({
-									"task":"create_exam",
-									"size":$("#input-field-exam-quantity").val(),
-									"course": $("#select-exam-course").val(),
-									"username":USER
-								}, function(data){
-									json = JSON.parse(data);
-									console.info(json);
-									 performAjax ({
-											"task" : "get_course_exam",
-											"course" :$("#select-exam-course").val()
-										},printExamsFunction);
+				"task":"verify_course_exam",
+				"course": $("#select-exam-course").val()
+			},function(data){
+				var temp = JSON.parse(data);
+				if(temp[0].count >= 1){
+					$("#exam-exits-danger-alert").show ("fast");
+						setTimeout (function () {
+							$("#exam-exits-danger-alert").hide ("fast");
+						}, 3000);
+				}else{
+					performAjax({
+						"task":"verify_count",
+						"course": $("#select-exam-course").val()
+					}, function(data){
+						var json = JSON.parse(data);
+						if( $("#input-field-exam-quantity").val() <= json[0].size ){
+							$.getScript("scripts/bootbox.min.js", function() {
+								bootbox.confirm({
+									title: '<h2>Are you sure?</h2>',
+									message: "Create exam",
+									buttons: {
+										'cancel': {
+											label: 'No',
+											className: 'btn-danger pull-left'
+										},
+										'confirm': {
+											label: 'Yes',
+											className: 'btn-primary pull-right'
+										}
+									},
+									callback: function(result) {
+										if (result) {
+											performAjax({
+												"task":"create_exam",
+												"size":$("#input-field-exam-quantity").val(),
+												"course": $("#select-exam-course").val(),
+												"username":USER
+											}, function(data){
+												json = JSON.parse(data);
+												console.info(json);
+												 performAjax ({
+														"task" : "get_course_exam",
+														"course" :$("#select-exam-course").val()
+													},printExamsFunction);
+											});
+										}
+									}
 								});
-							}
+							});
+						}else{
+							$("#exam-quantity-exede-danger-alert").show ("fast");
+							setTimeout (function () {
+								$("#exam-quantity-exede-danger-alert").hide ("fast");
+							}, 3000);
+							$("#input-field-exam-quantity-container").addClass ("has-error");
 						}
 					});
-				});
-			}else{
-				$("#exam-quantity-exede-danger-alert").show ("fast");
-				setTimeout (function () {
-					$("#exam-quantity-exede-danger-alert").hide ("fast");
-				}, 3000);
-				$("#input-field-exam-quantity-container").addClass ("has-error");
+				}
 			}
-		});
+		);
 	}
-		
 });
 
 function printExamsFunction (data) {
@@ -679,3 +708,99 @@ function printExamsFunction (data) {
 	$("#exams-table-body").html (table_content);
 }
 
+$("#select-modify-exam").change (function () {
+	//get question pool table content
+	performAjax ({
+		"task" : "get_exam",
+		"course" : $(this).val ()
+	},function(data){
+		var json = JSON.parse(data);
+		printExamsFunction(data);
+		console.info(json);
+		$("#input-field-modify-exams").val (json[0].questions);
+		
+		if (parseInt (json[0].active) === 1) { 
+			$("#input-checkbox-exam-active").prop ("checked", true);
+		} else {
+			$("#input-checkbox-exam-active").prop ("checked", false);
+		} 
+	});
+});
+
+$("#modify_exam").click(function(){
+	var bool = true;
+	var payload = [];
+	if(bool){
+		if($("#input-field-modify-exams").val() === "" || $("#input-field-modify-exams").val() === null ){
+			bool = false;
+			$("#exam-quantity-danger-alert").show ("fast");
+				setTimeout (function () {
+					$("#exam-quantity-danger-alert").hide ("fast");
+				}, 3000);
+			$("#input-field-exam-quantity-container").addClass ("has-error");
+		}else{
+			$("#input-field-exam-quantity-container").addClass ("has-error");
+			resetInputFieldColor($("#input-field-exam-quantity-container"));
+			$("#input-field-exam-quantity-container").addClass ("has-success");
+		}
+	}
+	
+	if(bool){
+		performAjax({
+			"task":"verify_count",
+			"course": $("#select-modify-exam").val()
+		}, function(data){
+			var json = JSON.parse(data);
+			if( $("#input-field-modify-exams").val() <= json[0].size ){
+				$.getScript("scripts/bootbox.min.js", function() {
+					bootbox.confirm({
+						title: '<h2>Are you sure?</h2>',
+						message: "Update exam",
+						buttons: {
+							'cancel': {
+								label: 'No',
+								className: 'btn-danger pull-left'
+							},
+							'confirm': {
+								label: 'Yes',
+								className: 'btn-primary pull-right'
+							}
+						},
+						callback: function(result) {
+							if (result) {
+								
+								if ($("#input-checkbox-exam-active").is (":checked")) {
+									CHECK = 1;
+								} else {
+									CHECK = 0;
+								}			
+								performAjax({
+									"task":"update_exam",
+									"size":$("#input-field-modify-exams").val(),
+									"course": $("#select-modify-exam").val(),
+									"username":USER,
+									"active": CHECK
+								}, function(data){
+									json = JSON.parse(data);
+									console.info(json);
+									 performAjax ({
+											"task" : "get_course_exam",
+											"course" :$("#select-modify-exam").val()
+										},printExamsFunction);
+									getExamDropdownOptions();
+									$("#input-field-modify-exams").val (null);
+								});
+							}
+						}
+					});
+				});
+			}else{
+				$("#exam-quantity-exede-danger-alert").show ("fast");
+				setTimeout (function () {
+					$("#exam-quantity-exede-danger-alert").hide ("fast");
+				}, 3000);
+				$("#input-field-exam-quantity-container").addClass ("has-error");
+			}
+		});
+	}
+});

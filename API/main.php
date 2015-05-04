@@ -85,6 +85,17 @@
 											"', CURRENT_TIMESTAMP, 1);");
 			break;
 		
+		case "update_exam":
+			$code    = MySql::runSelectQuery("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$data    = MySql::runOtherQuery("UPDATE exams SET course = '".$code[0]['code']."', questions = ".$_POST['size'].", username = '".$_POST['username'].
+											"', created =  CURRENT_TIMESTAMP, active = '".$_POST['active']."' WHERE  course = '".$code[0]['code']."';");
+			break;
+		
+		case "get_exam":
+			$code    = MySql::runSelectQuery("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$data    = MySql::runSelectQuery("SELECT * FROM exams WHERE course = '".$code[0]['code']."';");
+			break;
+		
 		case "update_question":
 		 
 			$data = MySql::runOtherQuery("UPDATE questions SET question = '".$_POST['question'][0]."', answer = '".$_POST['question'][1].
@@ -195,6 +206,13 @@
 			$sql = "SELECT * FROM exams WHERE course = '".$code[0]['code']."';"; 
 			$data = MySql::runSelectQuery ($sql);
 			break;
+		
+		case "verify_course_exam":
+			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$sql = "SELECT COUNT(*) AS count FROM exams WHERE course = '".$code[0]['code']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
 		
 		case "get_pool_questions":
 			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course_title']."';");
