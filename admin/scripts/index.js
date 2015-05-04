@@ -1,6 +1,5 @@
 var SET_DROPDOWN_OPTIONS = false;
-
-var SESSION = urlParse("session");
+SESSION = urlParse("session");
 			console.info(SESSION);
 getUsername();
 	
@@ -18,6 +17,16 @@ $("#delete-success-alert").hide ();
 $("#delete-error-alert").hide ();
 $("#update-success-alert").hide ();
 $("#update-error-alert").hide ();
+
+//logout event
+$("#logout").click(function(){
+	console.info("logout");
+	performAjax({"task":"delete_session",
+				 "session":session},function(data){
+		var json = JSON.parse(data);
+			window.location.href = "login.html";
+	});
+});
 
 $("#print_course").click(function() {
 	performAjax({
@@ -364,6 +373,8 @@ function getUsername(){
 	});
 	
 }
+
+
 
 function urlParse(name) {
 	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
