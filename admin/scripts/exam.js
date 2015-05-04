@@ -11,6 +11,10 @@ $("#exam-noQuestion-danger-alert").hide ();
 $("#question-danger-alert").hide ();
 $("#nochange-success-alert").hide ();
 $("#change-success-alert").hide ();
+$("#exam-create-select-danger-alert").hide ();
+$("#exam-quantity-danger-alert").hide ();
+$("#exam-quantity-exede-danger-alert").hide ();
+
 
 
 $("#plus_button").click(function() {
@@ -277,6 +281,7 @@ function getExamDropdownOptions () {
 		}
 		$("#existing-registered-courses-title").html (select_options);
 		$("#select-course-pool").html (select_options);
+		$("#select-exam-course").html (select_options);
 	});
 }
 
@@ -527,5 +532,150 @@ function verifyQuestionChange(param) {
 	return validuser;
 }
 
+$("#input-field-exam-quantity-container").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+});
 
+$("#input-field-modify-exams").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+});
+
+function getSelectedTitleExam(){
+	var bool = true;
+	var title = $("#select-exam-course").val();
+	if(title === null){
+		bool = false;
+		$("#exam-create-select-danger-alert").show ("fast");
+			setTimeout (function () {
+				$("#exam-create-select-danger-alert").hide ("fast");
+			}, 3000);
+	}
+	return bool;
+}
+
+$("#create_exam").click(function(){
+	var bool = null;
+	var payload = [];
+	bool = getSelectedTitleExam();
+	if(bool){
+		if($("#input-field-exam-quantity").val() === "" || $("#input-field-exams-quantity").val() === null ){
+			bool = false;
+			$("#exam-quantity-danger-alert").show ("fast");
+				setTimeout (function () {
+					$("#exam-quantity-danger-alert").hide ("fast");
+				}, 3000);
+			$("#input-field-exam-quantity-container").addClass ("has-error");
+		}else{
+			$("#input-field-exam-quantity-container").addClass ("has-error");
+			resetInputFieldColor($("#input-field-exam-quantity-container"));
+			$("#input-field-exam-quantity-container").addClass ("has-success");
+		}
+	}
+	
+	if(bool){
+		performAjax({
+			"task":"verify_count",
+			"course": $("#select-exam-course").val()
+		}, function(data){
+			var json = JSON.parse(data);
+			
+			if( $("#input-field-exam-quantity").val() <= json[0].size ){
+				$.getScript("scripts/bootbox.min.js", function() {
+					bootbox.confirm({
+						title: '<h2>Are you sure?</h2>',
+						message: "Create exam",
+						buttons: {
+							'cancel': {
+								label: 'No',
+								className: 'btn-danger pull-left'
+							},
+							'confirm': {
+								label: 'Yes',
+								className: 'btn-primary pull-right'
+							}
+						},
+						callback: function(result) {
+							if (result) {
+								performAjax({
+									"task":"create_exam",
+									"size":$("#input-field-exam-quantity").val(),
+									"course": $("#select-exam-course").val(),
+									"username":USER
+								}, function(data){
+									json = JSON.parse(data);
+									console.info(json);
+									 performAjax ({
+											"task" : "get_course_exam",
+											"course" :$("#select-exam-course").val()
+										},printExamsFunction);
+								});
+							}
+						}
+					});
+				});
+			}else{
+				$("#exam-quantity-exede-danger-alert").show ("fast");
+				setTimeout (function () {
+					$("#exam-quantity-exede-danger-alert").hide ("fast");
+				}, 3000);
+				$("#input-field-exam-quantity-container").addClass ("has-error");
+			}
+		});
+	}
+		
+});
+
+function printExamsFunction (data) {
+	var json = JSON.parse (data);
+	// console.info(JSON.stringify (json));
+	var table_content = "";
+	var fields = ["course", "username", "questions", "created", "active"];
+	
+	if (json.constructor === Array) {
+		for (var j = 0; j < json.length; j++) {
+			table_content += "<tr>";
+			for (var z = 0; z < fields.length; z++) {
+				if(z===0){
+					table_content += "<td>" + json[j][fields[z]] + "</a></td>"; 
+				}
+				else{
+					table_content += "<td>" + json[j][fields[z]] + "</td>";
+				}
+			}
+			table_content += "</tr>";
+		}
+	} else {
+		table_content += "<tr>";
+		for (var i = 0; i < fields.length; i++) {
+			table_content += "<td>" + json[fields[i]] + "</td>";
+		}
+		table_content += "</tr>";
+	}
+	console.info(table_content);
+	$("#exams-table-body").html (table_content);
+}
 

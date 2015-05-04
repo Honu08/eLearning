@@ -67,6 +67,18 @@ CREATE TABLE `sessions` (
   `time` date NOT NULL,
    FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `exams` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `course` varchar(250) NOT NULL,
+  `questions` int(10) unsigned NOT NULL,
+  `username` varchar(250) NOT NULL,
+  `created` date NOT NULL,
+  `active` tinyint(4) NOT NULL,
+   PRIMARY KEY (`id`),
+   FOREIGN KEY (`course`) REFERENCES `catalog` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+   FOREIGN KEY (`username`)REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 	
  `username` varchar(250) NOT NULL,
 --

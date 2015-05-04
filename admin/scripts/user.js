@@ -1,7 +1,9 @@
 var SET_DROPDOWN_OPTIONS = false;
-var USER = null;
-getDropdownOptions();
-var INPUT_FIELDS = [
+USER = null;
+
+getProfessionOptions();
+
+var INPUT_FIELD = [
 	"#input-field-name",
 	"#input-field-lastName",
 	"#input-field-license",
@@ -160,7 +162,7 @@ $("#edit_profile").click(function() {
 	}
 });
 
-function getDropdownOptions() {
+function getProfessionOptions() {
 	performAjax({
 		"task": "get_profession"
 	}, function(data) {
@@ -241,12 +243,14 @@ function getUsername(){
 		console.info(data);
 		$("#username").html("&nbsp;&nbsp;"+json[0].name+"&nbsp;"+json[0].lastName+"&nbsp;&nbsp;");
 		console.info(json.name);
-		$(INPUT_FIELDS[0]).val (json[0].name);
-		$(INPUT_FIELDS[1]).val (json[0].lastName);
-		$(INPUT_FIELDS[2]).val (json[0].license);
-		$(INPUT_FIELDS[3]).val (json[0].address);
-		$(INPUT_FIELDS[4]).val (json[0].email);
-		$(INPUT_FIELDS[5]).val (json[0].phone);
+		$(INPUT_FIELD[0]).val (json[0].name);
+		$(INPUT_FIELD[1]).val (json[0].lastName);
+		$(INPUT_FIELD[2]).val (json[0].license);
+		$(INPUT_FIELD[3]).val (json[0].address);
+		$(INPUT_FIELD[4]).val (json[0].email);
+		$(INPUT_FIELD[5]).val (json[0].phone);
+		$("#current-profession").html(json[0].profession);
+		USER = json[0].username;
 	});
 	
 }

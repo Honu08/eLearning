@@ -72,6 +72,19 @@
 			}
 			break;
 		
+		case "verify_count":
+			$code    = MySql::runSelectQuery("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$size    = MySql::runSelectQuery("SELECT COUNT(*) AS size FROM questions WHERE code = '".$code[0]['code'].
+											 "'AND active= 1;");
+			$data    = $size;
+			break;
+		
+		case "create_exam":
+			$code    = MySql::runSelectQuery("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$data    = MySql::runOtherQuery("INSERT INTO exams VALUES (NULL, '".$code[0]['code']."', ".$_POST['size'].", '".$_POST['username'].
+											"', CURRENT_TIMESTAMP, 1);");
+			break;
+		
 		case "update_question":
 		 
 			$data = MySql::runOtherQuery("UPDATE questions SET question = '".$_POST['question'][0]."', answer = '".$_POST['question'][1].
@@ -174,6 +187,12 @@
 		case "get_pool_info":
 			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course_title']."';");
 			$sql = "SELECT * FROM questions WHERE code = '".$code[0]['code']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
+		case "get_course_exam":
+			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
+			$sql = "SELECT * FROM exams WHERE course = '".$code[0]['code']."';"; 
 			$data = MySql::runSelectQuery ($sql);
 			break;
 		

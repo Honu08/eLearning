@@ -43,7 +43,7 @@ document.onmousemove = function(){
 				 "session":session},function(data){
 		var json = JSON.parse(data);
 			window.location.href = "login.html";
-	});}, (600000));
+	});}, (10*60000));
 };
 
 
