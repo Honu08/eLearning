@@ -630,7 +630,8 @@ $("#create_exam").click(function(){
 						"course": $("#select-exam-course").val()
 					}, function(data){
 						var json = JSON.parse(data);
-						if( $("#input-field-exam-quantity").val() <= json[0].size ){
+						console.info( json[0].size);
+						if(Number($("#input-field-exam-quantity").val()) <= Number(json[0].size)){
 							$.getScript("scripts/bootbox.min.js", function() {
 								bootbox.confirm({
 									title: '<h2>Are you sure?</h2>',
@@ -751,7 +752,7 @@ $("#modify_exam").click(function(){
 			"course": $("#select-modify-exam").val()
 		}, function(data){
 			var json = JSON.parse(data);
-			if( $("#input-field-modify-exams").val() <= json[0].size ){
+			if( Number($("#input-field-modify-exams").val()) <= Number(json[0].size) ){
 				$.getScript("scripts/bootbox.min.js", function() {
 					bootbox.confirm({
 						title: '<h2>Are you sure?</h2>',
