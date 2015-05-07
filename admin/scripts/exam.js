@@ -4,6 +4,11 @@ var index = 0;
 var title = $("#input-field-exam-title").val();
 
 getExamDropdownOptions();
+printAllExams();
+
+$(function() {
+	$('input[name="daterange"]').daterangepicker();
+});
 
  
 $("#exam-danger-alert").hide ();
@@ -624,6 +629,10 @@ $("#create_exam").click(function(){
 						setTimeout (function () {
 							$("#exam-exits-danger-alert").hide ("fast");
 						}, 3000);
+						$("#input-field-exam-quantity").val (null);
+						resetInputFieldColor($("#input-field-exam-quantity-container"));
+						getExamDropdownOptions();
+						printAllExams();
 				}else{
 					performAjax({
 						"task":"verify_count",
@@ -631,7 +640,8 @@ $("#create_exam").click(function(){
 					}, function(data){
 						var json = JSON.parse(data);
 						console.info( json[0].size);
-						if(Number($("#input-field-exam-quantity").val()) <= Number(json[0].size)){
+						console.info($("#date").val());
+						if(Number($("#input-field-exam-quantity").val()) <= Number(json[0].size) && Number($("#input-field-exam-quantity").val()) !== 0 ){
 							$.getScript("scripts/bootbox.min.js", function() {
 								bootbox.confirm({
 									title: '<h2>Are you sure?</h2>',
@@ -656,10 +666,11 @@ $("#create_exam").click(function(){
 											}, function(data){
 												json = JSON.parse(data);
 												console.info(json);
-												 performAjax ({
-														"task" : "get_course_exam",
-														"course" :$("#select-exam-course").val()
-													},printExamsFunction);
+												getExamDropdownOptions();
+												$("#input-field-exam-quantity").val (null);
+												resetInputFieldColor($("#input-field-exam-quantity-container"));
+												printAllExams();
+												
 											});
 										}
 									}
@@ -711,6 +722,14 @@ function printExamsFunction (data) {
 
 $("#select-modify-exam").change (function () {
 	//get question pool table content
+	var string = "<div id=\"input-field-modify-exams-container\" class=\"form-group input-color-verifier\">"+
+					"<label>Choice 3: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-modify-exams\" placeholder=\"Enter Choice 3\">"+
+				"</div>"+
+				"<input id=\"input-checkbox-exam-active\" type=\"checkbox\" name=\"active-checkbox\" value=\"1\">&nbsp;&nbsp;Currently Active";
+	
+	$("#questions-modify-field").html (string);
+	
 	performAjax ({
 		"task" : "get_exam",
 		"course" : $(this).val ()
@@ -738,11 +757,11 @@ $("#modify_exam").click(function(){
 				setTimeout (function () {
 					$("#exam-quantity-danger-alert").hide ("fast");
 				}, 3000);
-			$("#input-field-exam-quantity-container").addClass ("has-error");
+			$("#input-field-modify-exams-container").addClass ("has-error");
 		}else{
-			$("#input-field-exam-quantity-container").addClass ("has-error");
-			resetInputFieldColor($("#input-field-exam-quantity-container"));
-			$("#input-field-exam-quantity-container").addClass ("has-success");
+			$("#input-field-modify-exams-container").addClass ("has-error");
+			resetInputFieldColor($("#input-field-modify-exams-container"));
+			$("#input-field-modify-exams-container").addClass ("has-success");
 		}
 	}
 	
@@ -752,7 +771,8 @@ $("#modify_exam").click(function(){
 			"course": $("#select-modify-exam").val()
 		}, function(data){
 			var json = JSON.parse(data);
-			if( Number($("#input-field-modify-exams").val()) <= Number(json[0].size) ){
+			
+			if( Number($("#input-field-modify-exams").val()) <= Number(json[0].size) && Number($("#input-field-modify-exams").val()) !== 0 ){
 				$.getScript("scripts/bootbox.min.js", function() {
 					bootbox.confirm({
 						title: '<h2>Are you sure?</h2>',
@@ -784,12 +804,10 @@ $("#modify_exam").click(function(){
 								}, function(data){
 									json = JSON.parse(data);
 									console.info(json);
-									 performAjax ({
-											"task" : "get_course_exam",
-											"course" :$("#select-modify-exam").val()
-										},printExamsFunction);
+									printAllExams();
 									getExamDropdownOptions();
 									$("#input-field-modify-exams").val (null);
+									$("#questions-modify-field").html (null);
 								});
 							}
 						}
@@ -800,8 +818,19 @@ $("#modify_exam").click(function(){
 				setTimeout (function () {
 					$("#exam-quantity-exede-danger-alert").hide ("fast");
 				}, 3000);
-				$("#input-field-exam-quantity-container").addClass ("has-error");
+				$("#input-field-modify-exams-container").addClass ("has-error");
 			}
 		});
 	}
 });
+
+function printAllExams(){
+	performAjax ({
+		"task" : "get_all_exams",
+	},printExamsFunction);
+}
+
+
+
+
+

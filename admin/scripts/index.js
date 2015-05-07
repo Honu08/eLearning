@@ -380,7 +380,6 @@ function errorFunction(data) {
 }
 
 function getUsername(){
-	
 	performAjax({"task":"get_username",
 				 "session":SESSION},function(data){
 		var json = JSON.parse(data);

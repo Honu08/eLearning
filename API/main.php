@@ -27,6 +27,49 @@
 			$data = MySql::runSelectQuery($sql);
 			
 			break;
+				
+		case "get_users":
+		
+			$sql = "SELECT l.username, u.name, u.lastName FROM users u JOIN login l ON u.username = l.username AND l.username <> '".$_POST['username']."';";
+			$data = MySql::runSelectQuery($sql);
+		
+			break;
+		
+		case "get_roles":
+		
+			$sql = "SELECT role FROM login WHERE username = '".$_POST['user']."';";
+			$data = MySql::runSelectQuery($sql);
+		
+			break;
+		
+		case "update_role":
+		
+			$sql = "UPDATE login SET role= '".$_POST['role']."' WHERE username= '".$_POST['user']."';";
+			$data = MySql::runOtherQuery($sql);
+		
+			break;
+		
+		case "update_user_data":
+		
+			$sql = "UPDATE users SET name = '".$_POST['data'][0]."', lastName = '".$_POST['data'][1]."', address = '".$_POST['data'][2].
+					"', email = '".$_POST['data'][3]."', phone = '".$_POST['data'][4]."' WHERE username = '".$_POST['user']."' ";
+			$data = MySql::runOtherQuery($sql);
+		
+			break;
+		
+		case "verify_password":
+		
+			$sql = "SELECT COUNT(*) AS count FROM login WHERE username = '".$_POST['user']."' AND password = '".$_POST['password']."';";
+			$data = MySql::runSelectQuery($sql);
+		
+			break;
+		
+		case "update_password":
+		
+			$sql = "UPDATE login SET password = '".$_POST['new']."' WHERE password = '".$_POST['old']."';";
+			$data = MySql::runOtherQuery($sql);
+		
+			break;
 		
 		case "delete_session":
 			$sql = array (
@@ -204,6 +247,11 @@
 		case "get_course_exam":
 			$code =  MySql::runSelectQuery ("SELECT code FROM catalog WHERE title = '".$_POST['course']."';");
 			$sql = "SELECT * FROM exams WHERE course = '".$code[0]['code']."';"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
+		case "get_all_exams":
+			$sql = "SELECT * FROM exams;"; 
 			$data = MySql::runSelectQuery ($sql);
 			break;
 		

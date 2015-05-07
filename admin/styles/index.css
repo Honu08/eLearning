@@ -8,7 +8,10 @@
 
 #login-body{
 
-	background-color: #EFFBFB ;
+	background-image: url('desktop.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-position: center center; 
 
 }
 #page-container {
