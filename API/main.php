@@ -139,6 +139,13 @@
 			$data    = MySql::runSelectQuery("SELECT * FROM exams WHERE course = '".$code[0]['code']."';");
 			break;
 		
+		case "get_active_courses":
+		
+			$sql = "SELECT * FROM catalog WHERE active = 1;"; 
+			$data = MySql::runSelectQuery ($sql);
+		
+			break;
+		
 		case "update_question":
 		 
 			$data = MySql::runOtherQuery("UPDATE questions SET question = '".$_POST['question'][0]."', answer = '".$_POST['question'][1].

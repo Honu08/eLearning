@@ -3,18 +3,39 @@
     <head>
         <link rel="stylesheet" type="text/css" href="stylesheet.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- jQuery JavaScript library -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="scripts/valid.js"></script>
 		<!-- Bootstrap CSS library -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<!-- Custom CSS library -->
 		<link rel="stylesheet" href="styles/index.css">
-        <title>Admin</title>
+        <title>V.E.P</title>
     </head>
 	<body>
-			<div class="main-container" id="page-container">
+		<div class="container" id="header-container">
+			 <div class="row" >
+				 <div class="panel panel-default">
+					<div class="panel-heading" >
+						 <strong style="font-size: 30px;">V.E.P</strong> Virtual Education Program
+						<div class="btn-group  pull-right">
+							 <button class="btn btn-primary dropdown-toggle" id="user_button" data-toggle="dropdown" aria-expanded="false">
+								 <span  type="button" class="glyphicon glyphicon-user" aria-hidden="true"></span> <span id="username">&nbsp;&nbsp;Username</span> <span class="caret"></span>
+							 </button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a style="font-size: 15px;" href="#" id="logout">Logout</a></li>
+							</ul>
+						</div>
+					 </div>
+				 </div>
+			</div>
+		</div>
+		
+			<div class="main-container" id="user-page-container">
 			<h2 id="header-title">
 				User Portal
 			</h2>
-
+			
             <div role="tabpanel">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
@@ -25,10 +46,49 @@
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
-
                     <div role="tabpanel" class="tab-pane active" id="home">Home</div>
 					<!--Exam Tab-->
-                    <div role="tabpanel" class="tab-pane" id="profile">Enroll</div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+						 <div class="row" style="margin-top: 40px;">
+            				<div class="col-md-12">
+								<div class="panel panel-default" >
+									<div class="panel-heading" >
+										<h4><strong>Available Courses</strong></h4>
+									</div>
+									<div class="panel-body" >
+										<div style="margin-top: 40px;">
+											<table class="table table-striped table-responsive table-hover" id="course-table">
+												<thead id="course-table-header">
+													<tr>
+														<th>Select</th>
+														<th>Code</th>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+													</tr>
+												</thead>
+												<tbody id="course-table-body">
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="panel-footer" >
+										<button id="checkout-button" type="button" class="btn btn-primary">
+											<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp;Checkout
+										</button>
+									</div>
+								</div>
+							 </div>
+						</div>
+						
+						<script async src="scripts/paypal-button.min.js?merchant=Djhonu_31-facilitator@hotmail.com"
+							data-button      ="buynow"
+							data-name        ="Marihuana"
+							data-item_number = "buds"
+							data-amount      ="100.00"
+							data-env         ='sandbox'>	
+						</script>
+					</div>
 					
                     <div role="tabpanel" class="tab-pane" id="messages">Certificates</div>
 					
@@ -38,11 +98,10 @@
             </div>
 
 		</div>
-		<!-- jQuery JavaScript library -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		
 		<!-- Bootstrap JavaScript library -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<!-- Custom JavaScript library -->
-		<script src="scripts/index.js"></script>
+		<script src="scripts/user_index.js"></script>
 	</body>
 </html>
