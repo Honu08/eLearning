@@ -21,9 +21,6 @@ $("#user-role-alert").hide();
 $("#user-update-success-alert").hide();
 $("#user-update-error-alert").hide();
 
-
-
-
 $("#insert-success-alert").hide();
 $("#insert-error-alert").hide();
 $("#profession-error-alert").hide();
@@ -325,7 +322,7 @@ $("#update_role").click(function(){
 			setTimeout(function() {
 				$("#user-role-alert").hide("fast");
 			}, 5000);
-		valid = true;
+		valid = false;
 	}
 	
 	if ($("#input-checkbox-admin").is (":checked")) {

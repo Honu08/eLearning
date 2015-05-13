@@ -5,6 +5,7 @@
 	include "JsonSQL.php";
 	include "user.php";
 	include "file.class.php";
+	include "paypalOrder.php";
 	//include "upload.handler.php";
 
 	define("DB_SERVERNAME", "localhost");

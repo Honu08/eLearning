@@ -360,6 +360,16 @@
 			$table_name = trim ($_POST["table_name"]);
 			$data = MySql::getColumnNames ($table_name);
 			break;
+		
+		case "make_order":
+			
+			$data = Paypal::makeOrder($_POST['user'], $_POST['amt'], $_POST['data']);
+			break;
+		
+		case "cancel_order":
+			
+			$data = Paypal::cancelOrder($_POST['id']);
+			break;
 
 		default:
 			break;

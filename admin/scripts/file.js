@@ -189,7 +189,7 @@ function generateLinks(select){
 						"});});"+
 					"});"+"</script>";
 				} 
-			console.info (json.list.length);
+			console.info (json);
 			$("#links").html(string);
 		});  
 }

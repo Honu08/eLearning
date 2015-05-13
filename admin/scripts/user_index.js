@@ -1,4 +1,6 @@
 var SET_DROPDOWN_OPTIONS = false;
+DATA = null;
+USERNAME =null;
 SESSION = urlParse("session");
 			console.info(SESSION);
 getUsername();
@@ -122,45 +124,7 @@ $("#submit_course").click(function() {
 	}
 });
 
-$("#delete_course").click(function() {
-	resetAllInputFieldColors ();
-	
-	var course_code = $(INPUT_FIELDS[0]).val ().trim ();
-	console.info (course_code);
-	
- 	if (course_code === '' || course_code === null) {
-		$(INPUT_FIELDS[0] + '-container').addClass ("has-error");
-		$("#delete-error-alert").show ("fast");
-		setTimeout (function () {
-			$("#delete-error-alert").hide ("fast");
-		}, 3000);
-		
-	} else {
-		$(INPUT_FIELDS[0] + '-container').addClass ("has-success");
 
- 		setTimeout (function () {
-			performAjax({
-				"task": "exist_course",
-				"course_code" : course_code
-			}, function (data) {
-				var json = JSON.parse (data);
-				console.info (JSON.stringify (json));
- 				if (json.exists) {
-					performAjax({
-						"task": "delete_course",
-						"course_code": course_code
-					}, deleteSuccessFunction);
-				} else {	
-					$("#delete-error-alert").show ("fast");
-					setTimeout (function () {
-						$("#delete-error-alert").hide ("fast");
-						resetInputFields (null);
-					}, 3000);
-				}
-			});
-		}, 1000);
-	}
-});
 
 $("#modify_course").click (function () {
 	var validated    = true;
@@ -253,22 +217,7 @@ $("#existing-registered-courses").change (function () {
 		}
 	});
 });
-//filter
-$("#input-field-price").keydown(function (e) {
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-             // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) || 
-             // Allow: home, end, left, right, down, up
-            (e.keyCode >= 35 && e.keyCode <= 40)) {
-                 // let it happen, don't do anything
-                 return;
-        }
-        // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
-        }
-    });
+
 
 function getDropdownOptions () {
 	performAjax({
@@ -315,33 +264,11 @@ function resetAllInputFieldColors () {
 	}
 }
 
-function deleteSuccessFunction(data) {
-	var json = JSON.parse (data);
-	console.info(JSON.stringify (json));
 
-	if (json.success === true) {
-		performAjax({
-			"task": "get_courses"
-		}, printCoursesFunction);
-		
-		resetInputFields ();
-		getDropdownOptions ();
-		
-		$("#delete-success-alert").show ("fast");
-		setTimeout (function () {
-			$("#delete-success-alert").hide ("fast");
-		}, 3000);
-
-	} else {
-		$("#delete-error-alert").show ("fast");
-		setTimeout (function () {
-			$("#delete-error-alert").hide ("fast");
-		}, 3000);
-	}
-}
 
 function printCoursesFunction (data) {
 	var json = JSON.parse (data);
+	DATA = json;
 	var table_content = "";
 	var fields = ["select","code", "title", "desc", "price"];
 	
@@ -374,7 +301,9 @@ function printCoursesFunction (data) {
 		SET_DROPDOWN_OPTIONS = true;
 	}
 	$("#course-table-body").html (table_content);
+	console.info(DATA);
 }
+
 
 function errorFunction(data) {
 	console.info(data.text);
@@ -385,12 +314,11 @@ function getUsername(){
 				 "session":SESSION},function(data){
 		var json = JSON.parse(data);
 		console.info(data);
+		USERNAME = json[0].username;
 		$("#username").html("&nbsp;&nbsp;"+json[0].name+"&nbsp;"+json[0].lastName+"&nbsp;&nbsp;");
 	});
 	
 }
-
-
 
 function urlParse(name) {
 	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -399,7 +327,84 @@ function urlParse(name) {
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+$("#enroll-button").click(function(){
+	var input_values = [];
+	var username = USERNAME;
+	var amt;
+	for(var i=0; i<DATA.length; i++){
+		// Check whether active checkbox is checked or not
+		if ($("#input-checkbox-active-"+(i+1)+"").is (":checked")) {
+			input_values.push (DATA[i]);
+		} else {
+		}
+	}
+	
+	if(input_values.length !== 0){
+		amt = getAmount(input_values);
+		performAjax({
+			"task":"make_order",
+			"user":username,
+			"amt": amt,
+			"data": input_values
+		},function(data){
+			var json = JSON.parse(data);
+			var order = json.order;
+			var amt = json.amt;
+			console.info(order);
+			$.getScript("scripts/bootbox.min.js", function() {
+				bootbox.dialog({
+					title: '<h2>V.E.P Order</h2>',
+					message: "<script async src=\"scripts/paypal-button.min.js?merchant=Djhonu_31-facilitator@hotmail.com\""+
+								"data-button      =\"buynow\""+
+								"data-name        =\"Matricula\""+
+								"data-item_number = \""+order+"\""+
+								"data-amount      =\""+amt+"\""+
+								"data-env         ='sandbox'>"+	
+							"</script>",
+					 buttons: {
+						danger: {
+						  label: "Cancel",
+						  className: "btn-danger",
+						  callback: function() {
+							  performAjax({
+								  "task":"cancel_order",
+								  "id" : order
+							  }, function(data){
+								  var json = JSON.parse(data);
+								  console.info(json);
+							  });
+						  }
+						}
+					 }
+				});
+			});
+		});
+	}else{
+		//show error, "no course selected"
+	}
+	
+});
 
+
+function paypal(order, amt){
+	var string = "";
+	string = "<script async src='scripts/paypal-button.min.js?merchant=Djhonu_31-facilitator@hotmail.com'"+
+					"data-button     ='buynow'"+
+					"data-name        ='CNDPR Enroll'"+
+					"data-item_number = '"+order+"'"+
+					"data-amount      ='"+amt+"'"+
+					"data-env         ='sandbox'>"+	
+				"</script>";
+	return string;
+}
+
+function getAmount(arr){
+	var amt = 0;
+	for(var i=0; i<arr.length; i++){
+		amt += Number(arr[i].price);
+	}
+	return amt;
+}
 /* function preparePage (data){
 	var json = JSON.parse (data);
 	var table_header = "<tr>";
