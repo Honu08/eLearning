@@ -360,20 +360,20 @@ $("#select-question-edit").change (function () {
 					"<input type=\"text\" class=\"form-control\" id=\"input-field-question\" placeholder=\"Enter Question\">"+
 				"</div>"+
 				"<div id=\"input-field-answer-container\" class=\"form-group input-color-verifier\">"+
-					"<label>Correct Answer: </label>"+
-					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-answer\" placeholder=\"Enter Answer\">"+
+					"<label>Choice 1 (correct answer): </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-answer\" placeholder=\"Enter Choice 1 (correct answer)\">"+
 				"</div>"+
 				"<div id=\"input-field-choiceA-container\" class=\"form-group input-color-verifier\">"+
-					"<label>Choice 1: </label>"+
-					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceA\" placeholder=\"Enter Choice 1\">"+
+					"<label>Choice 2: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceA\" placeholder=\"Enter Choice 2\">"+
 				"</div>"+
 				"<div id=\"input-field-choiceB-container\" class=\"form-group input-color-verifier\">"+
-					"<label>Choice 2: </label>"+
-					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB\" placeholder=\"Enter Choice 2\">"+
+					"<label>Choice 3: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceB\" placeholder=\"Enter Choice 3\">"+
 				"</div>"+
 				"<div id=\"input-field-choiceC-container\" class=\"form-group input-color-verifier\">"+
-					"<label>Choice 3: </label>"+
-					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC\" placeholder=\"Enter Choice 3\">"+
+					"<label>Choice 4: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-choiceC\" placeholder=\"Enter Choice 4\">"+
 				"</div>"+
 				"<input id=\"input-checkbox-question-active\" type=\"checkbox\" name=\"active-checkbox\" value=\"1\">&nbsp;&nbsp;Currently Active";
 	
@@ -398,7 +398,6 @@ $("#select-question-edit").change (function () {
 			$("#input-checkbox-question-active").prop ("checked", false);
 		} 
 	});
-	
 	$("#question-edit-fields").html (fields);
 });
 
@@ -417,10 +416,15 @@ $("#edit_question").click(function(){
 		"#input-field-choiceB",
 		"#input-field-choiceC"];
 	
+		console.info(INPUT_FIELDS);
+	if(typeof $(INPUT_FIELDS[0]).val() === 'undefined'){
+		 valid = false;
+	}
+	
 	// Get values for all input text fields and validate at the same time
 	for (var i = 0; i < INPUT_FIELDS.length; i++) {
 		resetInputFieldColor($(INPUT_FIELDS[i] + '-container'));
-		if ($(INPUT_FIELDS[i]).val() === "") {
+		if ($(INPUT_FIELDS[i]).val() === "" ) {
 			$(INPUT_FIELDS[i] + '-container').addClass("has-error");
  			$("#question-danger-alert").show("fast");
 			setTimeout(function() {
@@ -430,10 +434,10 @@ $("#edit_question").click(function(){
 		} else {
 			$(INPUT_FIELDS[i] + '-container').addClass("has-success");
 			input_values.push($(INPUT_FIELDS[i]).val());
+			// Check whether active checkbox is checked or not
 		}
 	}
-
-	// Check whether active checkbox is checked or not
+	
 	if ($("#input-checkbox-question-active").is (":checked")) {
 		input_values.push (1);
 	} else {
@@ -476,11 +480,19 @@ $("#edit_question").click(function(){
 			// if they are equals do nothing erase content and show message for 5 seconds
 			 if(index === values.length){
 				$("#question-edit-fields").html(null);
-				 $("#nochange-success-alert").show("fast");
-					setTimeout(function() {
-						$("#nochange-success-alert").hide("fast");
-					}, 5000);
+			    $("#nochange-success-alert").show("fast");
+				 
+				setTimeout(function() {
+					$("#nochange-success-alert").hide("fast");
+				}, 5000);
+				 
 				valid = false;
+				 
+				performAjax ({
+					"task" : "get_pool_questions",
+					"course_title" : $("#select-course-pool").val ()
+				},getSelectQuestions);
+				 
 			 }else{
 				 // else update question on database
 				 performAjax({
@@ -510,12 +522,18 @@ $("#edit_question").click(function(){
 										 performAjax ({
 											"task" : "get_pool_info",
 											"course_title" : $("#select-course-pool").val ()
+											 
 										},printQuestionsFunction);
 										$("#question-edit-fields").html(null);
 										$("#change-success-alert").show("fast");
 										setTimeout(function() {
 											$("#change-success-alert").hide("fast");
 										}, 5000);
+										
+										performAjax ({
+											"task" : "get_pool_questions",
+											"course_title" : $("#select-course-pool").val ()
+										},getSelectQuestions);
 									}
 								}
 							});
@@ -525,8 +543,6 @@ $("#edit_question").click(function(){
 			 }
 		});
 	}
-	
-	
 });
 
 function verifyQuestionChange(param) {
@@ -745,6 +761,7 @@ $("#select-modify-exam").change (function () {
 			$("#input-checkbox-exam-active").prop ("checked", false);
 		} 
 	});
+	
 });
 
 $("#modify_exam").click(function(){
@@ -829,7 +846,6 @@ function printAllExams(){
 		"task" : "get_all_exams",
 	},printExamsFunction);
 }
-
 
 
 
