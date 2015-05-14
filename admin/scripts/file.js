@@ -141,7 +141,7 @@ function getFileDropdownOptions () {
 		var select_options = '<option disabled selected=true>Choose a course</option>';
 		if (json.constructor === Array) {
 			for (var i = 0; i < json.length; i++) {
-				select_options += '<option>' + json[i].title + '</option>';
+				select_options += '<option>' + json[i].code + '</option>';
 			}
 		} else {
 			select_options += '<option>' + json.title + '</option>';
