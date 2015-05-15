@@ -141,9 +141,17 @@
 		
 		case "get_active_courses":
 		
-			$sql = "SELECT * FROM catalog WHERE active = 1;"; 
-			$data = MySql::runSelectQuery ($sql);
+			$sql = "SELECT * FROM catalog WHERE".
+				   " code NOT IN ( SELECT c.code FROM catalog c JOIN enroll e ON e.code = c.code".
+				   " WHERE c.active =1 AND e.username = '".$_POST['user']."') AND active = 1;";
 		
+			$data =  MySql::runSelectQuery($sql);
+			break;
+		
+		case "get_user_courses":
+		
+			$sql = "SELECT * FROM catalog c JOIN enroll e ON c.code = e.code  WHERE e.username = '".$_POST['user']."';";
+			$data =  MySql::runSelectQuery($sql);
 			break;
 		
 		case "update_question":

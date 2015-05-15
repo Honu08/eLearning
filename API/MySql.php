@@ -42,7 +42,7 @@
              }
 		}
 		
-		// Bellaqueo
+		
 		public static function getColumnNames ($table_name){
 			$sql = 'SELECT COLUMN_NAME AS `column` FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "' . $table_name . '";';
 			$resultset = MySQL::runSelectQuery ($sql);

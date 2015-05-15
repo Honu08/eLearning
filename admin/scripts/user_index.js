@@ -2,7 +2,7 @@ var SET_DROPDOWN_OPTIONS = false;
 DATA = null;
 USERNAME =null;
 SESSION = urlParse("session");
-			console.info(SESSION);
+
 getUsername();
 	
 var INPUT_FIELDS = [
@@ -30,11 +30,15 @@ $("#logout").click(function(){
 	});
 });
 
-
-performAjax({
-	"task": "get_active_courses"
-}, printCoursesFunction);
-
+//print available course minus user courses
+performAjax({"task":"get_username",
+				 "session":SESSION},function(data){
+		var json = JSON.parse(data);
+		performAjax({
+			"task": "get_active_courses",
+			"user": json[0].username
+		}, printCoursesFunction);
+});
 
 function performAjax(data, callback) {
 	$.ajax({
@@ -317,7 +321,6 @@ function getUsername(){
 		USERNAME = json[0].username;
 		$("#username").html("&nbsp;&nbsp;"+json[0].name+"&nbsp;"+json[0].lastName+"&nbsp;&nbsp;");
 	});
-	
 }
 
 function urlParse(name) {

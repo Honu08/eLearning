@@ -1,5 +1,6 @@
 var questions = [];
 var CHECK = null;
+var USER = null;
 var index = 0;
 var title = $("#input-field-exam-title").val();
 
@@ -674,19 +675,23 @@ $("#create_exam").click(function(){
 									},
 									callback: function(result) {
 										if (result) {
-											performAjax({
-												"task":"create_exam",
-												"size":$("#input-field-exam-quantity").val(),
-												"course": $("#select-exam-course").val(),
-												"username":USER
-											}, function(data){
-												json = JSON.parse(data);
-												console.info(json);
-												getExamDropdownOptions();
-												$("#input-field-exam-quantity").val (null);
-												resetInputFieldColor($("#input-field-exam-quantity-container"));
-												printAllExams();
-												
+											performAjax({"task":"get_username",
+													 "session":SESSION},function(data){
+											var json = JSON.parse(data);
+												performAjax({
+													"task":"create_exam",
+													"size":$("#input-field-exam-quantity").val(),
+													"course": $("#select-exam-course").val(),
+													"username":json[0].username
+												}, function(data){
+													json = JSON.parse(data);
+													console.info(json);
+													getExamDropdownOptions();
+													$("#input-field-exam-quantity").val (null);
+													resetInputFieldColor($("#input-field-exam-quantity-container"));
+													printAllExams();
+													console.info(SESSION);
+												});
 											});
 										}
 									}
@@ -811,20 +816,24 @@ $("#modify_exam").click(function(){
 									CHECK = 1;
 								} else {
 									CHECK = 0;
-								}			
-								performAjax({
-									"task":"update_exam",
-									"size":$("#input-field-modify-exams").val(),
-									"course": $("#select-modify-exam").val(),
-									"username":USER,
-									"active": CHECK
-								}, function(data){
-									json = JSON.parse(data);
-									console.info(json);
-									printAllExams();
-									getExamDropdownOptions();
-									$("#input-field-modify-exams").val (null);
-									$("#questions-modify-field").html (null);
+								}
+								performAjax({"task":"get_username",
+										 "session":SESSION},function(data){
+								var json = JSON.parse(data);
+									performAjax({
+										"task":"update_exam",
+										"size":$("#input-field-modify-exams").val(),
+										"course": $("#select-modify-exam").val(),
+										"username":json[0].username,
+										"active": CHECK
+									}, function(data){
+										json = JSON.parse(data);
+										console.info(json);
+										printAllExams();
+										getExamDropdownOptions();
+										$("#input-field-modify-exams").val (null);
+										$("#questions-modify-field").html (null);
+									});
 								});
 							}
 						}
