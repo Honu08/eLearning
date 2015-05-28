@@ -21,6 +21,13 @@
 	/* border: 2px solid blue; */
 }
 
+#exam-container {
+	width: 800px;
+	margin: auto;
+	margin-top: 50px;
+	/* border: 2px solid blue; */
+}
+
 #user-page-container {
 	width: 1200px;
 	margin: auto;

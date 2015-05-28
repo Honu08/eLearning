@@ -22,7 +22,7 @@
 			$sql = "SELECT o.username, d.code FROM orders o JOIN order_detail d ON d.id = o.id WHERE o.id = ".$id." ;";
 			$data = MySql::runSelectQuery($sql);
 			foreach($data as $course){
-				array_push($result, MySql::runOtherQuery("INSERT INTO enroll VALUES ('".$course['username']."', '".$course['code']."');"));
+				array_push($result, MySql::runOtherQuery("INSERT INTO enroll VALUES ( '".$course['code']."', '".$course['username']."');"));
 				print_r($result);
 			}
 			

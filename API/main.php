@@ -378,6 +378,33 @@
 			
 			$data = Paypal::cancelOrder($_POST['id']);
 			break;
+		
+		case "get_user_exams":
+		
+				$sql =  "SELECT e.id, e.course, e.questions FROM exams e JOIN enroll l ON l.code = e.course WHERE l.username =  '".$_POST['user']."' AND e.active =1";
+				$data = MySql::runSelectQuery($sql);
+		
+			break;
+		
+		case "generate_exam":
+		
+				$questions = array();
+				$choices   = array();
+				$payload   = array();
+				//$sql =  "SELECT e.id, e.course, e.questions FROM exams e JOIN enroll l ON l.code = e.course WHERE l.username =  '".$_POST['user']."' AND e.active =1";
+				$value = MySql::runSelectQuery("SELECT questions FROM exams WHERE id = ".$_POST['exam']."");
+				$sql = "SELECT * FROM questions q JOIN exams e ON q.code = e.course WHERE e.id = ".$_POST['exam']." ORDER BY Rand() LIMIT ".$value[0]['questions']."";
+				$struc = MySql::runSelectQuery($sql);
+				
+				foreach($struc as $exam){
+					$choices = [];
+					array_push($choices , $exam['answer'],  $exam['choiceA'], $exam['choiceB'], $exam['choiceC']);
+					shuffle($choices);
+					array_push($payload, array( "question" => $exam['question'], "choices" => $choices));
+				}
+				
+				$data = $payload;
+			break;
 
 		default:
 			break;

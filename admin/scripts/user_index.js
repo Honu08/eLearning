@@ -304,7 +304,13 @@ function printCoursesFunction (data) {
 		getDropdownOptions ();
 		SET_DROPDOWN_OPTIONS = true;
 	}
-	$("#course-table-body").html (table_content);
+	
+	if(DATA.length > 0){
+		$("#course-table-body").html (table_content);
+	}else{
+		$("#course-table-body").html ("No Course Avilable");
+	}
+	
 	console.info(DATA);
 }
 
