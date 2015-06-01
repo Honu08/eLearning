@@ -130,6 +130,16 @@ CREATE TABLE `enroll` (
   FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `certificates` (
+  `username` varchar(250) NOT NULL,
+  `profession` varchar(250) NOT NULL,
+  `code` varchar(250) NOT NULL,
+  `grade` int(10) NOT NULL,
+  `exam_date`  date NOT NULL,
+  FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`code`) REFERENCES `catalog` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Dumping data for table `login`
 --

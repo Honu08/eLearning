@@ -12,10 +12,42 @@
         <title>Exams</title>
     </head>
 	<body>
-		<div class="container" id="exam-container">
+		
+		<div class="container" id="header-container">
 			 <div class="row" >
-				 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-				 
+				 <div class="panel panel-default">
+					<div class="panel-heading" >
+						 <strong style="font-size: 30px;">VEP</strong> Virtual Education Program
+					 </div>
+				 </div>
+			</div>
+		</div>
+		
+		<div class="container" id="exam-container">
+			<div class="row" >
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<strong>Name: </strong><span id="name-label"></span><span id="last-label"></span><br>
+							<strong>Course: </strong><span id="course-label"></span><br>
+							<strong>Date: </strong><span id="date-label"></span>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-12">
+					<div id="exam-error-alert" class="alert alert-danger" role="alert">
+						<strong>Error!</strong> some of your answer are missing!.
+					</div>
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+					</div>
+					<hr class="featurette-divider">
+				</div>
+				<div class="col-md-12">
+					<button class="btn btn-primary" id="submit_exam">
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;&nbsp;Submit Exam
+					</button>&nbsp;
 				</div>
 			</div>
 		</div>

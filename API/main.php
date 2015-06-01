@@ -142,10 +142,20 @@
 		case "get_active_courses":
 		
 			$sql = "SELECT * FROM catalog WHERE".
-				   " code NOT IN ( SELECT c.code FROM catalog c JOIN enroll e ON e.code = c.code".
-				   " WHERE c.active =1 AND e.username = '".$_POST['user']."') AND active = 1;";
+				   " code NOT IN ( SELECT c.code FROM catalog c JOIN enroll e ON e.code = c.code ".
+				   " WHERE c.active =1 AND e.username = '".$_POST['user']."') AND code NOT IN (SELECT f.code FROM certificates f WHERE f.username = '".$_POST['user']."') AND active = 1;";
 		
 			$data =  MySql::runSelectQuery($sql);
+			
+			break;
+		
+		case "get_user_certificates":
+		
+			$sql = "SELECT * FROM certificates ".
+					"WHERE username = '".$_POST['user']."';";
+		
+			$data =  MySql::runSelectQuery($sql);
+			
 			break;
 		
 		case "get_user_courses":
@@ -386,6 +396,13 @@
 		
 			break;
 		
+		case "get_exam_course_code":
+		
+				$sql =  "SELECT course FROM exams WHERE id = '".$_POST['exam']."';";
+				$data = MySql::runSelectQuery($sql);
+		
+			break;
+		
 		case "generate_exam":
 		
 				$questions = array();
@@ -404,6 +421,41 @@
 				}
 				
 				$data = $payload;
+			break;
+		
+		case "exam_correction":
+		
+				$exam = $_POST['exam'];
+				$max = count($exam);
+				$result = 0;
+				$send = array();
+				$send2 = array();
+				$user = MySql::runSelectQuery("SELECT username FROM sessions WHERE session = ".$_POST['user']."");
+				$profession = MySql::runSelectQuery("SELECT profession FROM users WHERE username = '".$user[0]['username']."'");
+				$course = MySql::runSelectQuery("SELECT course FROM exams WHERE id = ".$_POST['id']."");
+		
+				foreach($exam as $answer){
+					$sql = "SELECT COUNT(*) as value FROM questions WHERE question = '".$answer['question']."' AND answer = '".$answer['answer']."'";
+					$struc = MySql::runSelectQuery($sql);
+					$result += $struc[0]['value'];
+					if ($struc[0]['value'] == 0){
+						array_push($send, array("question" => $answer['question'], "answer" => $answer['answer'], "flag" => "fail"));
+					}
+				}
+				
+				$total = ($result/$max) * 100;
+				
+				if($total < 64){
+					array_push($send2, array("exam"=>$send, "status"=>"fail", "grade"=>$total));
+					MySql::runOtherQuery("DELETE FROM enroll WHERE username = '".$user[0]['username']."' AND code = '".$course[0]['course']."'");
+					
+				}else{
+					array_push($send2, array("exam"=>$send, "status"=>"pass", "grade"=>$total));
+					MySql::runOtherQuery("DELETE FROM enroll WHERE username = '".$user[0]['username']."' AND code = '".$course[0]['course']."'");
+					MySql::runOtherQuery("INSERT INTO certificates VALUES ('".$user[0]['username']."', '".$profession[0]['profession']."', '".$course[0]['course']."', ".$total.", CURRENT_TIMESTAMP);");
+				}
+		
+				$data = $send2;
 			break;
 
 		default:

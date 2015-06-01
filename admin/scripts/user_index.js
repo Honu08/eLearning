@@ -40,6 +40,20 @@ performAjax({"task":"get_username",
 		}, printCoursesFunction);
 });
 
+//print user certificates
+performAjax({"task":"get_username",
+				 "session":SESSION},function(data){
+		var json = JSON.parse(data);
+		performAjax({
+			"task": "get_user_certificates",
+			"user": json[0].username
+		}, function(data){
+			var json = JSON.parse(data);
+			console.info(json);
+			printCertificatesFunction(json);
+		});
+});
+
 function performAjax(data, callback) {
 	$.ajax({
 		url: "../API/main.php",
@@ -130,73 +144,7 @@ $("#submit_course").click(function() {
 
 
 
-$("#modify_course").click (function () {
-	var validated    = true;
-	var input_values = [];
-	
-	// Get values for all input text fields and validate at the same time
-	for (var i = 0; i < INPUT_FIELDS.length; i++) {
-		resetInputFieldColor ($(INPUT_FIELDS[i] + '-container'));
-		if ($(INPUT_FIELDS[i]).val () === "") {
-			$(INPUT_FIELDS[i] + '-container').addClass ("has-error");
-			validated = false;
-		} else {
-			$(INPUT_FIELDS[i] + '-container').addClass ("has-success");
-			input_values.push ($(INPUT_FIELDS[i]).val ());
-		}
-	}
-	
-	// Check whether active checkbox is checked or not
-	if ($("#input-checkbox-active").is (":checked")) {
-		input_values.push (1);
-	} else {
-		input_values.push (0);
-	}
-	
- 	if (validated) {		
-		performAjax({
-			"task" : "update_course",
-			"previous_course" : $("#existing-registered-courses").val (),
-			"course_code"  : input_values[0],
-			"course_type"  : input_values[1],
-			"course_title" : input_values[2],
-			"course_desc"  : input_values[3],
-			"course_price" : input_values[4],
-			"course_active": input_values[5]
-		}, function (data) {
-			var json = JSON.parse (data);
 
-			if (json.success === true) {
-				performAjax({
-					"task": "get_courses"
-				}, printCoursesFunction);
-				
-				resetInputFields ();
-				getDropdownOptions ();
-				getExamDropdownOptions ();
-				getFileDropdownOptions();
-				
-				$("#update-success-alert").show ("fast");
-				setTimeout (function () {
-					$("#update-success-alert").hide ("fast");
-				}, 3000);
-			} else {
-				$("#update-error-alert").show ("fast");
-				setTimeout (function () {
-					$("#update-error-alert").hide ("fast");
-				}, 3000);
-			}	
-		});
-	} else {
-		$("#update-error-alert").show ("fast");
-		setTimeout (function () {
-			$("#update-error-alert").hide ("fast");
-		}, 3000);
-	}
-
-	
-	
-});
 
 $("#existing-registered-courses").change (function () {
 	resetAllInputFieldColors ();
@@ -314,6 +262,39 @@ function printCoursesFunction (data) {
 	console.info(DATA);
 }
 
+function printCertificatesFunction (data) {
+	console.info(data);
+	var table_content = "";
+	var fields = ["username","profession", "code", "grade", "exam_date"];
+	
+	if (data.constructor === Array) {
+		for (var j = 0; j < data.length; j++) {
+			table_content += "<tr>";
+			for (var z = 0; z < fields.length; z++) {
+					table_content += "<td>" + data[j][fields[z]] + "</td>";
+			}
+			table_content += "</tr>";
+			console.info(JSON.stringify (table_content));
+		}
+	} else {
+		table_content += "<tr>";
+		for (var i = 0; i < fields.length; i++) {
+			table_content += "<td>" + data[fields[i]] + "</td>";
+		}
+		table_content += "</tr>";
+	}
+	
+	if (!SET_DROPDOWN_OPTIONS) {
+		getDropdownOptions ();
+		SET_DROPDOWN_OPTIONS = true;
+	}
+	
+	if(data.length > 0){
+		$("#certificates-table-body").html (table_content);
+	}else{
+		$("#certificates-table-body").html ("No Course Avilable");
+	}
+}
 
 function errorFunction(data) {
 	console.info(data.text);
