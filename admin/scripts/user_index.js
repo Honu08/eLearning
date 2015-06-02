@@ -292,7 +292,7 @@ function printCertificatesFunction (data) {
 	if(data.length > 0){
 		$("#certificates-table-body").html (table_content);
 	}else{
-		$("#certificates-table-body").html ("No Course Avilable");
+		$("#certificates-table-body").html ("No Certificate Avilable");
 	}
 }
 

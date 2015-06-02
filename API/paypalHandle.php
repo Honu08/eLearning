@@ -25,9 +25,10 @@
 				array_push($result, MySql::runOtherQuery("INSERT INTO enroll VALUES ( '".$course['code']."', '".$course['username']."');"));
 				print_r($result);
 			}
-			
+			$ses = MySql::runSelectQuery("SELECT session FROM sessions WHERE username = '".$course['username']."'");
 			MySql::runOtherQuery("DELETE FROM orders WHERE id = ".$id."");
-			header('Location: http://45.55.162.46/eLearning/admin/login.html');
+			
+			header("Location: http://45.55.162.46/eLearning/admin/user.html?session=".$ses[0]['session']."");
 		}
 		
     }

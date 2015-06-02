@@ -163,15 +163,94 @@ $("#submit_exam").click(function(){
 		},function(data){
 			var json = JSON.parse(data);
 			console.info(json);
-			
+			$.getScript('scripts/bootbox.min.js', function() {
+				bootbox.confirm({
+					title: 'Exam',
+					message: 'Are you sure you want to finish the exam?',
+					buttons: {
+						'cancel': {
+							label: 'No',
+							className: 'btn-danger pull-left'
+						},
+						'confirm': {
+							label: 'Yes',
+							className: 'btn-primary pull-right'
+						}
+					},
+					callback: function(result) {
+						if (result) {
+							$("#exam-container").html(null);
+							bootbox.dialog({
+								title: '<h2>VEP EXAM</h2>',
+								message: generateMessage(json),
+								 buttons: {
+									danger: {
+									  label: "OK",
+									  className: "btn-primary",
+									  callback: function() {
+										  window.location.href = "user.html" + "?session=" + ses;
+									  }
+									}
+								 }
+							});
+						}
+					}
+				});
+			});
 		});
 	}
-	
-	
 });
 
 
+function generateMessage(json){
+	var string = "";
 
+	if(json[0].status == "fail"){
+		string = "<strong>Exam failed.</strong><br>"+
+			     "<p>Verify your wrong answers:</p>";
+		for(var i=0; i<json[0].exam.length; i++){
+			string += "Question: "+json[0].exam[i].question+"<br>Answer: <strong>"+json[0].exam[i].answer+"</strong><br><br>";
+			console.info("Fucking loop");
+		}
+	}else{
+		string = "<strong>Congratulations! You pass the exam.</strong>";
+	}
+	return string;
+}
+/* $.getScript('scripts/bootbox.min.js', function() {
+	bootbox.confirm({
+		title: 'Exam',
+		message: 'Are you sure you want to take the exam of course: "+param[i].course+"',
+		buttons: {
+			'cancel': {
+				label: 'No',
+				className: 'btn-danger pull-left'
+			},
+			'confirm': {
+				label: 'Yes',
+				className: 'btn-primary pull-right'
+			}
+		},
+		callback: function(result) {
+			if (result) {
+				bootbox.dialog({
+					title: '<h2>VEP EXAM</h2>',
+					message: '<br>',
+					 buttons: {
+						danger: {
+						  label: "OK",
+						  className: "btn-primary",
+						  callback: function() {
+							  window.location.href = "user.html" + "?session=" + ses;
+						  }
+						}
+					 }
+				});
+			}
+		}
+	});
+});
+ */
 
 
 /* <button id="exam-button" type="button" class="btn btn-primary">

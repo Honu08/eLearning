@@ -293,7 +293,26 @@
 			$data = MySql::runSelectQuery ($sql);
 			break;
 		
+		case "get_certifications":
+
+			$sql = "SELECT u.name, u.lastName, u.profession, u.license, c.code, c.grade, c.exam_date, c.username FROM certificates c JOIN users u ON u.username = c.username WHERE status = 0;"; 
+			$data = MySql::runSelectQuery ($sql);
+			break;
+		
+		case "update_certification":
+			
+			$result = array();
+		
+			foreach($_POST['data'] as $user){
+				$sql = "UPDATE certificates SET status = 1 WHERE username = '".$user['username']."';"; 
+				array_push($result, MySql::runOtherQuery ($sql));
+			}
+		
+			$data = $result;
+			break;
+		
 		case "get_question_info":
+		
 			$sql = "SELECT * FROM questions WHERE question = '".$_POST['question']."';"; 
 			$data = MySql::runSelectQuery ($sql);
 			break;
@@ -430,7 +449,7 @@
 				$result = 0;
 				$send = array();
 				$send2 = array();
-				$user = MySql::runSelectQuery("SELECT username FROM sessions WHERE session = ".$_POST['user']."");
+				$user = MySql::runSelectQuery("SELECT * FROM sessions WHERE session = ".$_POST['user']."");
 				$profession = MySql::runSelectQuery("SELECT profession FROM users WHERE username = '".$user[0]['username']."'");
 				$course = MySql::runSelectQuery("SELECT course FROM exams WHERE id = ".$_POST['id']."");
 		
@@ -450,11 +469,13 @@
 					MySql::runOtherQuery("DELETE FROM enroll WHERE username = '".$user[0]['username']."' AND code = '".$course[0]['course']."'");
 					
 				}else{
+					$today = date("m.d.y");
+					
 					array_push($send2, array("exam"=>$send, "status"=>"pass", "grade"=>$total));
 					MySql::runOtherQuery("DELETE FROM enroll WHERE username = '".$user[0]['username']."' AND code = '".$course[0]['course']."'");
-					MySql::runOtherQuery("INSERT INTO certificates VALUES ('".$user[0]['username']."', '".$profession[0]['profession']."', '".$course[0]['course']."', ".$total.", CURRENT_TIMESTAMP);");
+					MySql::runOtherQuery("INSERT INTO certificates VALUES ('".$user[0]['username']."', '".$profession[0]['profession']."', '".$course[0]['course']."', ".$total.", CURRENT_TIMESTAMP, 0);");
+					
 				}
-		
 				$data = $send2;
 			break;
 
