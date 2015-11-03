@@ -744,8 +744,8 @@ function printExamsFunction (data) {
 $("#select-modify-exam").change (function () {
 	//get question pool table content
 	var string = "<div id=\"input-field-modify-exams-container\" class=\"form-group input-color-verifier\">"+
-					"<label>Choice 3: </label>"+
-					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-modify-exams\" placeholder=\"Enter Choice 3\">"+
+					"<label>Question Quantity: </label>"+
+					"<input type=\"text\" style=\"width: 75%\" class=\"form-control\" id=\"input-field-modify-exams\" placeholder=\"Enter question quantity\">"+
 				"</div>"+
 				"<input id=\"input-checkbox-exam-active\" type=\"checkbox\" name=\"active-checkbox\" value=\"1\">&nbsp;&nbsp;Currently Active";
 	

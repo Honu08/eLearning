@@ -220,6 +220,7 @@ function resetAllInputFieldColors () {
 
 function printCoursesFunction (data) {
 	var json = JSON.parse (data);
+	console.info("aquiiiiiiiii",json);
 	DATA = json;
 	var table_content = "";
 	var fields = ["select","code", "title", "desc", "price"];

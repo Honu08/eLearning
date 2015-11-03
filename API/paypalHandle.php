@@ -30,6 +30,5 @@
 			
 			header("Location: http://45.55.162.46/eLearning/admin/user.html?session=".$ses[0]['session']."");
 		}
-		
     }
 ?>

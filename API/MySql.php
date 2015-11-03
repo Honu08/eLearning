@@ -6,7 +6,9 @@
 
 		public function __construct(){
 			$this->mysqli = new mysqli(DB_SERVERNAME, DB_USERNAME, DB_PASSWORD, DB_NAME);
+			$this->mysqli->set_charset ("utf8");
 		}
+		
 
 		public static function connectToMySQL(){
 			$instance = new self();
@@ -18,7 +20,7 @@
 		}
 
 		public static function runSelectQuery($query){
-			 $instance = new self();
+			 $instance = new self(null);
 			 $results = array ();
              if ($result = $instance->mysqli->query($query)) {
                 if ($result->num_rows != 0) {
@@ -31,7 +33,8 @@
               } 
                 
                return $results;
-		}
+		} 
+		
 
 		public static function runOtherQuery($query){
 			 $instance = new self();
@@ -76,4 +79,3 @@
 		}
 	}
 ?>
-

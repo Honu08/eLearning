@@ -141,12 +141,8 @@
 		
 		case "get_active_courses":
 		
-			$sql = "SELECT * FROM catalog WHERE".
-				   " code NOT IN ( SELECT c.code FROM catalog c JOIN enroll e ON e.code = c.code ".
-				   " WHERE c.active =1 AND e.username = '".$_POST['user']."') AND code NOT IN (SELECT f.code FROM certificates f WHERE f.username = '".$_POST['user']."') AND active = 1;";
-		
+			$sql = "SELECT * FROM catalog WHERE code NOT IN ( SELECT c.code FROM catalog c JOIN enroll e ON e.code = c.code WHERE c.active =1 AND e.username = '".$_POST['user']."') AND code NOT IN (SELECT f.code FROM certificates f WHERE f.username = '".$_POST['user']."') AND active = 1 order by code;";
 			$data =  MySql::runSelectQuery($sql);
-			
 			break;
 		
 		case "get_user_certificates":

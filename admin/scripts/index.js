@@ -2,6 +2,8 @@ var SET_DROPDOWN_OPTIONS = false;
 SESSION = urlParse("session");
 			console.info(SESSION);
 getUsername();
+
+
 	
 var INPUT_FIELDS = [
 		"#input-field-code",

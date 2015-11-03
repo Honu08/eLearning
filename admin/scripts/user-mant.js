@@ -166,7 +166,7 @@ function getUserData(){
 		$("#current-profession").html(json[0].profession);
 		USERNAME = json[0].username;
 		console.info(USERNAME);
-	    getUsersOptions(USERNAME);
+	    //getUsersOptions(USERNAME);
 	});
 	
 }
@@ -250,7 +250,6 @@ $("#change_password").click(function(){
 		});
 	}
 });
-
 
 
 
